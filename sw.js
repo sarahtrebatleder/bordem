@@ -1,10 +1,10 @@
 const CACHE = 'activity-picker-v1';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
+  '/bordem/',
+  '/bordem/index.html',
+  '/bordem/manifest.json',
+  '/bordem/icons/icon-192.png',
+  '/bordem/icons/icon-512.png',
 ];
 
 self.addEventListener('install', e => {

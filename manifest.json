@@ -2,7 +2,7 @@
   "name": "What Should I Do?",
   "short_name": "What to Do",
   "description": "Pick a random activity when you're bored.",
-  "start_url": "/",
+  "start_url": "/bordem/",
   "display": "standalone",
   "background_color": "#f5f0e8",
   "theme_color": "#f5f0e8",
