@@ -25,10 +25,7 @@
       padding-top: max(env(safe-area-inset-top), 48px);
     }
 
-    .container {
-      max-width: 480px;
-      width: 100%;
-    }
+    .container { max-width: 480px; width: 100%; }
 
     .header {
       margin-bottom: 36px;
@@ -44,11 +41,7 @@
       color: #2a2a2a;
     }
 
-    .subtitle {
-      color: #999;
-      margin-top: 5px;
-      font-size: 13px;
-    }
+    .subtitle { color: #999; margin-top: 5px; font-size: 13px; }
 
     .save-status {
       font-size: 12px;
@@ -57,10 +50,9 @@
       white-space: nowrap;
       padding-bottom: 2px;
     }
-
     .save-status.error { color: #c0392b; }
+    .save-status.syncing { color: #e8a020; }
 
-    /* Main card */
     .card {
       background: #fff;
       border: 1px solid #e0d9cc;
@@ -75,25 +67,9 @@
       text-align: center;
     }
 
-    .card-hint {
-      color: #bbb;
-      font-size: 15px;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
-
-    .suggestion {
-      font-size: 22px;
-      color: #2a2a2a;
-      margin-bottom: 28px;
-      line-height: 1.4;
-    }
-
-    .done-msg {
-      color: #999;
-      font-size: 15px;
-      margin-bottom: 20px;
-    }
+    .card-hint { color: #bbb; font-size: 15px; margin-bottom: 24px; line-height: 1.5; }
+    .suggestion { font-size: 22px; color: #2a2a2a; margin-bottom: 28px; line-height: 1.4; }
+    .done-msg { color: #999; font-size: 15px; margin-bottom: 20px; }
 
     .btn-row {
       display: flex;
@@ -115,30 +91,11 @@
     button:active { opacity: 0.75; }
     button:disabled { opacity: 0.4; cursor: default; }
 
-    .btn-primary {
-      background: #2a2a2a;
-      color: #fff;
-      border: 1px solid #2a2a2a;
-    }
+    .btn-primary { background: #2a2a2a; color: #fff; border: 1px solid #2a2a2a; }
+    .btn-success { background: #3a7d44; color: #fff; border: 1px solid #3a7d44; }
+    .btn-ghost { background: #fff; color: #2a2a2a; border: 1px solid #ccc; }
 
-    .btn-success {
-      background: #3a7d44;
-      color: #fff;
-      border: 1px solid #3a7d44;
-    }
-
-    .btn-ghost {
-      background: #fff;
-      color: #2a2a2a;
-      border: 1px solid #ccc;
-    }
-
-    /* Add input */
-    .add-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
+    .add-row { display: flex; gap: 8px; margin-bottom: 20px; }
 
     .add-row input {
       flex: 1;
@@ -152,11 +109,8 @@
       outline: none;
     }
 
-    .add-row input:focus {
-      border-color: #a09080;
-    }
+    .add-row input:focus { border-color: #a09080; }
 
-    /* Edit list toggle */
     .toggle-link {
       background: none;
       border: none;
@@ -202,34 +156,39 @@
     }
 
     .remove-btn:hover { color: #999; }
+    .empty-msg { padding: 14px 16px; color: #bbb; font-size: 14px; font-style: italic; }
 
-    .empty-msg {
-      padding: 14px 16px;
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: #f5f0e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Georgia, serif;
       color: #bbb;
-      font-size: 14px;
-      font-style: italic;
+      font-size: 15px;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+
+  <div id="loading-screen">Connecting…</div>
+
+  <div class="container" style="opacity:0;transition:opacity 0.3s" id="app">
     <div class="header">
       <div>
         <h1>What should I do?</h1>
         <p class="subtitle" id="count"></p>
       </div>
-      <span class="save-status" id="save-status">✓ Saved</span>
+      <span class="save-status" id="save-status">✓ Synced</span>
     </div>
 
-    <div class="card" id="card">
-      <p class="card-hint">Press the button when you're not sure what to do.</p>
-      <div class="btn-row">
-        <button class="btn-primary" id="suggest-btn" onclick="handleStart()">Suggest something</button>
-      </div>
-    </div>
+    <div class="card" id="card"></div>
 
     <div class="add-row">
-      <input type="text" id="new-item" placeholder="Add an activity..." onkeydown="if(event.key==='Enter') handleAdd()" />
+      <input type="text" id="new-item" placeholder="Add an activity…" onkeydown="if(event.key==='Enter') handleAdd()" />
       <button class="btn-primary" onclick="handleAdd()">Add</button>
     </div>
 
@@ -237,8 +196,19 @@
     <ul class="activity-list" id="activity-list" style="display:none"></ul>
   </div>
 
-  <script>
-    const STORAGE_KEY = 'activity-picker-list';
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, onSnapshot }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAYHU-yUwaIlUG27wnnwiCFZWLMupDI-M0",
+      authDomain: "bordem-44e21.firebaseapp.com",
+      projectId: "bordem-44e21",
+      storageBucket: "bordem-44e21.firebasestorage.app",
+      messagingSenderId: "30536291883",
+      appId: "1:30536291883:web:b2ce8618a86887e9a1fc6e"
+    };
 
     const DEFAULT_ACTIVITIES = [
       "Go for a walk",
@@ -255,47 +225,64 @@
       "Do a math puzzle",
     ];
 
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const docRef = doc(db, "data", "activities");
+
     let activities = [];
     let queue = [];
     let current = null;
     let editOpen = false;
     let saveTimer = null;
+    window._done = false;
 
-    // --- Storage ---
-    function load() {
+    async function initData() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            activities = parsed;
-            return;
-          }
+        const snap = await getDoc(docRef);
+        if (snap.exists() && Array.isArray(snap.data().list) && snap.data().list.length > 0) {
+          activities = snap.data().list;
+        } else {
+          activities = [...DEFAULT_ACTIVITIES];
+          await setDoc(docRef, { list: activities });
         }
-      } catch(e) {}
-      activities = [...DEFAULT_ACTIVITIES];
+      } catch(e) {
+        activities = [...DEFAULT_ACTIVITIES];
+        setStatus('error');
+      }
+
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('app').style.opacity = '1';
+      render();
+
+      // Real-time listener — syncs changes from any device instantly
+      onSnapshot(docRef, (snap) => {
+        if (snap.exists() && Array.isArray(snap.data().list)) {
+          activities = snap.data().list;
+          render();
+          setStatus('synced');
+        }
+      });
     }
 
-    function save() {
+    async function saveToFirestore() {
       clearTimeout(saveTimer);
-      setStatus('saving');
-      saveTimer = setTimeout(() => {
+      setStatus('syncing');
+      saveTimer = setTimeout(async () => {
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(activities));
-          setStatus('saved');
+          await setDoc(docRef, { list: activities });
+          setStatus('synced');
         } catch(e) {
           setStatus('error');
         }
-      }, 400);
+      }, 500);
     }
 
     function setStatus(s) {
       const el = document.getElementById('save-status');
-      el.className = 'save-status' + (s === 'error' ? ' error' : '');
-      el.textContent = s === 'saving' ? 'Saving...' : s === 'error' ? 'Save failed' : '✓ Saved';
+      el.className = 'save-status' + (s === 'error' ? ' error' : s === 'syncing' ? ' syncing' : '');
+      el.textContent = s === 'syncing' ? 'Syncing…' : s === 'error' ? 'Sync failed' : '✓ Synced';
     }
 
-    // --- Shuffle ---
     function shuffle(arr) {
       const a = [...arr];
       for (let i = a.length - 1; i > 0; i--) {
@@ -305,9 +292,16 @@
       return a;
     }
 
-    // --- UI rendering ---
-    function updateCount() {
+    function escHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function render() {
       document.getElementById('count').textContent = activities.length + ' activities in your list';
+      renderCard();
+      renderList();
+      document.getElementById('toggle-btn').textContent =
+        editOpen ? 'Hide list' : `Edit list (${activities.length})`;
     }
 
     function renderCard() {
@@ -316,21 +310,25 @@
         card.innerHTML = `
           <p class="suggestion">${escHtml(current)}</p>
           <div class="btn-row">
-            <button class="btn-success" onclick="handleYep()">Sounds good</button>
-            <button class="btn-ghost" onclick="handleNope()">Nope, next</button>
+            <button class="btn-success" id="yep-btn">Sounds good</button>
+            <button class="btn-ghost" id="nope-btn">Nope, next</button>
           </div>`;
+        document.getElementById('yep-btn').onclick = handleYep;
+        document.getElementById('nope-btn').onclick = handleNope;
       } else if (window._done) {
         card.innerHTML = `
           <p class="done-msg">You've seen everything. Starting over.</p>
           <div class="btn-row">
-            <button class="btn-primary" onclick="handleStart()">Go again</button>
+            <button class="btn-primary" id="again-btn">Go again</button>
           </div>`;
+        document.getElementById('again-btn').onclick = handleStart;
       } else {
         card.innerHTML = `
           <p class="card-hint">Press the button when you're not sure what to do.</p>
           <div class="btn-row">
-            <button class="btn-primary" onclick="handleStart()" ${activities.length === 0 ? 'disabled' : ''}>Suggest something</button>
+            <button class="btn-primary" id="suggest-btn" ${activities.length === 0 ? 'disabled' : ''}>Suggest something</button>
           </div>`;
+        document.getElementById('suggest-btn').onclick = handleStart;
       }
     }
 
@@ -345,27 +343,13 @@
       ul.innerHTML = activities.map((a, i) => `
         <li>
           <span>${escHtml(a)}</span>
-          <button class="remove-btn" onclick="handleRemove(${i})">×</button>
+          <button class="remove-btn" data-i="${i}">×</button>
         </li>`).join('');
+      ul.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.onclick = () => handleRemove(parseInt(btn.dataset.i));
+      });
     }
 
-    function updateToggleBtn() {
-      document.getElementById('toggle-btn').textContent =
-        editOpen ? 'Hide list' : `Edit list (${activities.length})`;
-    }
-
-    function render() {
-      updateCount();
-      renderCard();
-      renderList();
-      updateToggleBtn();
-    }
-
-    function escHtml(s) {
-      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    // --- Actions ---
     function getNext(q) {
       if (activities.length === 0) return;
       if (q.length === 0) q = shuffle(activities);
@@ -374,27 +358,18 @@
       window._done = false;
     }
 
-    function handleStart() {
-      getNext([]);
-      render();
-    }
+    function handleStart() { getNext([]); render(); }
 
     function handleNope() {
       if (queue.length === 0 && current) {
-        current = null;
-        window._done = true;
+        current = null; window._done = true;
       } else {
         getNext(queue);
       }
       render();
     }
 
-    function handleYep() {
-      current = null;
-      queue = [];
-      window._done = false;
-      render();
-    }
+    function handleYep() { current = null; queue = []; window._done = false; render(); }
 
     function handleAdd() {
       const input = document.getElementById('new-item');
@@ -403,7 +378,7 @@
       activities.push(val);
       input.value = '';
       input.focus();
-      save();
+      saveToFirestore();
       render();
     }
 
@@ -411,22 +386,23 @@
       const removed = activities[i];
       activities.splice(i, 1);
       if (current === removed) { current = null; queue = []; }
-      save();
+      saveToFirestore();
       render();
     }
 
     function toggleEdit() {
       editOpen = !editOpen;
       renderList();
-      updateToggleBtn();
+      document.getElementById('toggle-btn').textContent =
+        editOpen ? 'Hide list' : `Edit list (${activities.length})`;
     }
 
-    // --- Init ---
-    window._done = false;
-    load();
-    render();
+    // Expose to global scope for inline handlers
+    window.handleAdd = handleAdd;
+    window.toggleEdit = toggleEdit;
 
-    // --- Service Worker ---
+    initData();
+
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js');
     }
