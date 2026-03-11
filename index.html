@@ -158,31 +158,100 @@
     .remove-btn:hover { color: #999; }
     .empty-msg { padding: 14px 16px; color: #bbb; font-size: 14px; font-style: italic; }
 
-    #loading-screen {
+    /* Full-screen overlays */
+    .screen {
       position: fixed;
       inset: 0;
       background: #f5f0e8;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       font-family: Georgia, serif;
-      color: #bbb;
-      font-size: 15px;
       z-index: 10;
+      padding: 24px;
+      text-align: center;
     }
+
+    .screen h2 {
+      font-size: 24px;
+      font-weight: normal;
+      color: #2a2a2a;
+      margin-bottom: 10px;
+    }
+
+    .screen p {
+      color: #999;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    .btn-google {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid #d8d0c4;
+      border-radius: 3px;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-family: Georgia, serif;
+      color: #2a2a2a;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn-google:hover { opacity: 0.8; }
+
+    .btn-google svg { flex-shrink: 0; }
+
+    .sign-out-btn {
+      background: none;
+      border: none;
+      font-size: 12px;
+      color: #ccc;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: underline;
+      padding: 0;
+    }
+
+    .sign-out-btn:hover { color: #999; }
   </style>
 </head>
 <body>
 
-  <div id="loading-screen">Connecting…</div>
+  <!-- Loading screen -->
+  <div class="screen" id="loading-screen">
+    <p style="color:#bbb; margin:0">Loading…</p>
+  </div>
 
+  <!-- Sign-in screen -->
+  <div class="screen" id="signin-screen" style="display:none">
+    <h2>What should I do?</h2>
+    <p>Sign in to access your activity list.</p>
+    <button class="btn-google" id="signin-btn">
+      <svg width="18" height="18" viewBox="0 0 18 18">
+        <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/>
+        <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 01-7.18-2.54H1.83v2.07A8 8 0 008.98 17z"/>
+        <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 010-3.04V5.41H1.83a8 8 0 000 7.18l2.67-2.07z"/>
+        <path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 001.83 5.4L4.5 7.49a4.77 4.77 0 014.48-3.31z"/>
+      </svg>
+      Sign in with Google
+    </button>
+  </div>
+
+  <!-- Main app -->
   <div class="container" style="opacity:0;transition:opacity 0.3s" id="app">
     <div class="header">
       <div>
         <h1>What should I do?</h1>
         <p class="subtitle" id="count"></p>
       </div>
-      <span class="save-status" id="save-status">✓ Synced</span>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="save-status" id="save-status">✓ Synced</span>
+        <button class="sign-out-btn" id="signout-btn">Sign out</button>
+      </div>
     </div>
 
     <div class="card" id="card"></div>
@@ -200,6 +269,8 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc, onSnapshot }
       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAYHU-yUwaIlUG27wnnwiCFZWLMupDI-M0",
@@ -227,16 +298,51 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const docRef = doc(db, "data", "activities");
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
     let activities = [];
     let queue = [];
     let current = null;
     let editOpen = false;
     let saveTimer = null;
+    let unsubscribeSnapshot = null;
     window._done = false;
 
-    async function initData() {
+    // --- Auth ---
+    document.getElementById('signin-btn').onclick = async () => {
+      try {
+        await signInWithPopup(auth, provider);
+      } catch(e) {
+        console.error('Sign in failed', e);
+      }
+    };
+
+    document.getElementById('signout-btn').onclick = async () => {
+      if (unsubscribeSnapshot) unsubscribeSnapshot();
+      await signOut(auth);
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Signed in
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('signin-screen').style.display = 'none';
+        document.getElementById('app').style.opacity = '1';
+        await initData(user.uid);
+      } else {
+        // Signed out
+        if (unsubscribeSnapshot) unsubscribeSnapshot();
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('app').style.opacity = '0';
+        document.getElementById('signin-screen').style.display = 'flex';
+      }
+    });
+
+    // --- Firestore ---
+    async function initData(uid) {
+      const docRef = doc(db, "users", uid, "data", "activities");
+
       try {
         const snap = await getDoc(docRef);
         if (snap.exists() && Array.isArray(snap.data().list) && snap.data().list.length > 0) {
@@ -250,31 +356,29 @@
         setStatus('error');
       }
 
-      document.getElementById('loading-screen').style.display = 'none';
-      document.getElementById('app').style.opacity = '1';
       render();
 
-      // Real-time listener — syncs changes from any device instantly
-      onSnapshot(docRef, (snap) => {
+      unsubscribeSnapshot = onSnapshot(docRef, (snap) => {
         if (snap.exists() && Array.isArray(snap.data().list)) {
           activities = snap.data().list;
           render();
           setStatus('synced');
         }
       });
-    }
 
-    async function saveToFirestore() {
-      clearTimeout(saveTimer);
-      setStatus('syncing');
-      saveTimer = setTimeout(async () => {
-        try {
-          await setDoc(docRef, { list: activities });
-          setStatus('synced');
-        } catch(e) {
-          setStatus('error');
-        }
-      }, 500);
+      // Save function scoped to this user's doc
+      window._saveToFirestore = async () => {
+        clearTimeout(saveTimer);
+        setStatus('syncing');
+        saveTimer = setTimeout(async () => {
+          try {
+            await setDoc(docRef, { list: activities });
+            setStatus('synced');
+          } catch(e) {
+            setStatus('error');
+          }
+        }, 500);
+      };
     }
 
     function setStatus(s) {
@@ -283,6 +387,11 @@
       el.textContent = s === 'syncing' ? 'Syncing…' : s === 'error' ? 'Sync failed' : '✓ Synced';
     }
 
+    function saveToFirestore() {
+      if (window._saveToFirestore) window._saveToFirestore();
+    }
+
+    // --- Shuffle ---
     function shuffle(arr) {
       const a = [...arr];
       for (let i = a.length - 1; i > 0; i--) {
@@ -296,6 +405,7 @@
       return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
+    // --- Render ---
     function render() {
       document.getElementById('count').textContent = activities.length + ' activities in your list';
       renderCard();
@@ -350,6 +460,7 @@
       });
     }
 
+    // --- Actions ---
     function getNext(q) {
       if (activities.length === 0) return;
       if (q.length === 0) q = shuffle(activities);
@@ -397,11 +508,8 @@
         editOpen ? 'Hide list' : `Edit list (${activities.length})`;
     }
 
-    // Expose to global scope for inline handlers
     window.handleAdd = handleAdd;
     window.toggleEdit = toggleEdit;
-
-    initData();
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js');
