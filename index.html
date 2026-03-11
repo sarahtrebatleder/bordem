@@ -106,7 +106,15 @@
     .btn-success { background: #3a7d44; color: #fff; border: 1px solid #3a7d44; }
     .btn-ghost { background: #fff; color: #2a2a2a; border: 1px solid #ccc; }
 
-    .add-row { display: flex; gap: 8px; margin-bottom: 20px; }
+    .add-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .add-mode-picker { display: flex; align-items: center; gap: 6px; margin-bottom: 16px; }
+    .add-mode-label { font-size: 12px; color: #999; margin-right: 2px; }
+    .add-mode-btn {
+      padding: 4px 12px; font-size: 12px; font-family: inherit;
+      border: 1px solid #d8d0c4; border-radius: 3px; cursor: pointer;
+      background: transparent; color: #888; transition: all 0.15s;
+    }
+    .add-mode-btn.active { background: #fff; color: #2a2a2a; border-color: #a09080; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
     .add-row input, .child-add-row input {
       flex: 1; padding: 10px 14px; border: 1px solid #d8d0c4; border-radius: 3px;
@@ -248,14 +256,20 @@
     <div class="mode-toggle">
       <button class="mode-btn" id="mode-solo" onclick="setMode('solo')">Solo</button>
       <button class="mode-btn active" id="mode-either" onclick="setMode('either')">Either</button>
-      <button class="mode-btn" id="mode-together" onclick="setMode('together')">With James</button>
+      <button class="mode-btn" id="mode-together" onclick="setMode('together')">Together</button>
     </div>
 
     <div class="card" id="card"></div>
 
     <div class="add-row">
-      <input type="text" id="new-item" placeholder="Add an activity…" onkeydown="if(event.key==='Enter') handleAdd()" />
+      <input type="text" id="new-item" placeholder="Add an activity…" onkeydown="if(event.key==='Enter') handleAdd()" oninput="updateAddModePicker()" />
       <button class="btn-primary" onclick="handleAdd()">Add</button>
+    </div>
+    <div class="add-mode-picker" id="add-mode-picker" style="display:none">
+      <span class="add-mode-label">Type:</span>
+      <button class="add-mode-btn" id="add-mode-solo" onclick="setAddMode('solo')">Solo</button>
+      <button class="add-mode-btn active" id="add-mode-either" onclick="setAddMode('either')">Either</button>
+      <button class="add-mode-btn" id="add-mode-together" onclick="setAddMode('together')">Together</button>
     </div>
 
     <button class="toggle-link" id="toggle-btn" onclick="toggleEdit()">Edit list</button>
@@ -309,6 +323,7 @@
     let saveTimer = null;
     let unsubscribeSnapshot = null;
     let currentMode = 'either'; // 'either' | 'solo' | 'together'
+    let newActivityMode = 'either'; // mode selected when adding a new activity
     window._done = false;
 
     // --- Auth ---
@@ -615,14 +630,29 @@
     }
 
     // --- Actions ---
+    function updateAddModePicker() {
+      const input = document.getElementById('new-item');
+      const picker = document.getElementById('add-mode-picker');
+      picker.style.display = input.value.trim() ? 'flex' : 'none';
+    }
+
+    function setAddMode(mode) {
+      newActivityMode = mode;
+      ['solo', 'either', 'together'].forEach(m => {
+        document.getElementById('add-mode-' + m).classList.toggle('active', m === mode);
+      });
+    }
+
     function handleAdd() {
       const input = document.getElementById('new-item');
       const val = input.value.trim();
       if (!val || activities.some(a => a.label === val)) return;
-      // New activities default to current mode (if not 'either', otherwise 'either')
-      activities.push({ label: val, mode: 'either' });
+      activities.push({ label: val, mode: newActivityMode });
       input.value = '';
       input.focus();
+      newActivityMode = 'either';
+      setAddMode('either');
+      document.getElementById('add-mode-picker').style.display = 'none';
       saveToFirestore();
       render();
     }
