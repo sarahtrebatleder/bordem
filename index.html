@@ -34,22 +34,10 @@
       align-items: flex-end;
     }
 
-    h1 {
-      font-size: 26px;
-      font-weight: normal;
-      letter-spacing: 0.02em;
-      color: #2a2a2a;
-    }
-
+    h1 { font-size: 26px; font-weight: normal; letter-spacing: 0.02em; color: #2a2a2a; }
     .subtitle { color: #999; margin-top: 5px; font-size: 13px; }
 
-    .save-status {
-      font-size: 12px;
-      color: #bbb;
-      font-style: italic;
-      white-space: nowrap;
-      padding-bottom: 2px;
-    }
+    .save-status { font-size: 12px; color: #bbb; font-style: italic; white-space: nowrap; padding-bottom: 2px; }
     .save-status.error { color: #c0392b; }
     .save-status.syncing { color: #e8a020; }
 
@@ -68,26 +56,16 @@
     }
 
     .card-hint { color: #bbb; font-size: 15px; margin-bottom: 24px; line-height: 1.5; }
+    .suggestion-category { font-size: 13px; color: #aaa; margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
     .suggestion { font-size: 22px; color: #2a2a2a; margin-bottom: 28px; line-height: 1.4; }
     .done-msg { color: #999; font-size: 15px; margin-bottom: 20px; }
 
-    .btn-row {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
+    .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
     button {
-      font-family: inherit;
-      font-size: 14px;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      border-radius: 3px;
-      padding: 10px 22px;
-      transition: opacity 0.15s;
+      font-family: inherit; font-size: 14px; letter-spacing: 0.02em;
+      cursor: pointer; border-radius: 3px; padding: 10px 22px; transition: opacity 0.15s;
     }
-
     button:active { opacity: 0.75; }
     button:disabled { opacity: 0.4; cursor: default; }
 
@@ -97,136 +75,111 @@
 
     .add-row { display: flex; gap: 8px; margin-bottom: 20px; }
 
-    .add-row input {
-      flex: 1;
-      padding: 10px 14px;
-      border: 1px solid #d8d0c4;
-      border-radius: 3px;
-      font-size: 14px;
-      font-family: inherit;
-      background: #faf8f4;
-      color: #2a2a2a;
-      outline: none;
+    .add-row input, .child-add-row input {
+      flex: 1; padding: 10px 14px; border: 1px solid #d8d0c4; border-radius: 3px;
+      font-size: 14px; font-family: inherit; background: #faf8f4; color: #2a2a2a; outline: none;
     }
-
-    .add-row input:focus { border-color: #a09080; }
+    .add-row input:focus, .child-add-row input:focus { border-color: #a09080; }
 
     .toggle-link {
-      background: none;
-      border: none;
-      font-size: 13px;
-      color: #999;
-      cursor: pointer;
-      padding: 0;
-      text-decoration: underline;
-      font-family: inherit;
+      background: none; border: none; font-size: 13px; color: #999;
+      cursor: pointer; padding: 0; text-decoration: underline; font-family: inherit;
     }
 
+    /* Activity list */
     .activity-list {
-      margin-top: 14px;
-      list-style: none;
-      border: 1px solid #e0d9cc;
-      border-radius: 4px;
-      background: #fff;
-      max-height: 300px;
-      overflow-y: auto;
+      margin-top: 14px; list-style: none; border: 1px solid #e0d9cc;
+      border-radius: 4px; background: #fff; max-height: 420px; overflow-y: auto;
     }
 
-    .activity-list li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 16px;
-      font-size: 14px;
-      color: #2a2a2a;
+    .activity-item {
       border-bottom: 1px solid #f0ebe2;
     }
+    .activity-item:last-child { border-bottom: none; }
 
-    .activity-list li:last-child { border-bottom: none; }
+    .activity-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 16px; font-size: 14px; color: #2a2a2a;
+    }
+
+    .activity-row-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+    .activity-label { flex: 1; min-width: 0; }
+
+    .expand-btn {
+      background: none; border: none; color: #bbb; cursor: pointer;
+      font-size: 12px; padding: 2px 4px; font-family: inherit; flex-shrink: 0;
+      transition: color 0.15s;
+    }
+    .expand-btn:hover { color: #888; }
+
+    .child-count {
+      font-size: 11px; color: #bbb; white-space: nowrap; flex-shrink: 0;
+    }
 
     .remove-btn {
-      background: none;
-      border: none;
-      color: #ccc;
-      cursor: pointer;
-      font-size: 20px;
-      line-height: 1;
-      padding: 0 2px;
-      flex-shrink: 0;
+      background: none; border: none; color: #ccc; cursor: pointer;
+      font-size: 20px; line-height: 1; padding: 0 2px; flex-shrink: 0;
+    }
+    .remove-btn:hover { color: #999; }
+
+    /* Children section */
+    .children-section {
+      background: #faf8f4;
+      border-top: 1px solid #f0ebe2;
+      padding: 8px 16px 12px 32px;
     }
 
-    .remove-btn:hover { color: #999; }
+    .child-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 0; font-size: 13px; color: #555;
+      border-bottom: 1px solid #f0ebe2;
+    }
+    .child-item:last-of-type { border-bottom: none; }
+
+    .child-add-row {
+      display: flex; gap: 6px; margin-top: 8px;
+    }
+
+    .child-add-row input { font-size: 13px; padding: 7px 10px; }
+
+    .btn-small {
+      font-family: inherit; font-size: 12px; padding: 7px 12px;
+      background: #2a2a2a; color: #fff; border: 1px solid #2a2a2a;
+      border-radius: 3px; cursor: pointer; white-space: nowrap;
+    }
+
     .empty-msg { padding: 14px 16px; color: #bbb; font-size: 14px; font-style: italic; }
 
-    /* Full-screen overlays */
+    /* Screens */
     .screen {
-      position: fixed;
-      inset: 0;
-      background: #f5f0e8;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-family: Georgia, serif;
-      z-index: 10;
-      padding: 24px;
-      text-align: center;
+      position: fixed; inset: 0; background: #f5f0e8;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-family: Georgia, serif; z-index: 10; padding: 24px; text-align: center;
     }
-
-    .screen h2 {
-      font-size: 24px;
-      font-weight: normal;
-      color: #2a2a2a;
-      margin-bottom: 10px;
-    }
-
-    .screen p {
-      color: #999;
-      font-size: 14px;
-      margin-bottom: 32px;
-    }
+    .screen h2 { font-size: 24px; font-weight: normal; color: #2a2a2a; margin-bottom: 10px; }
+    .screen p { color: #999; font-size: 14px; margin-bottom: 32px; }
 
     .btn-google {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #fff;
-      border: 1px solid #d8d0c4;
-      border-radius: 3px;
-      padding: 12px 24px;
-      font-size: 15px;
-      font-family: Georgia, serif;
-      color: #2a2a2a;
-      cursor: pointer;
-      transition: opacity 0.15s;
+      display: flex; align-items: center; gap: 12px;
+      background: #fff; border: 1px solid #d8d0c4; border-radius: 3px;
+      padding: 12px 24px; font-size: 15px; font-family: Georgia, serif;
+      color: #2a2a2a; cursor: pointer; transition: opacity 0.15s;
     }
-
     .btn-google:hover { opacity: 0.8; }
 
-    .btn-google svg { flex-shrink: 0; }
-
     .sign-out-btn {
-      background: none;
-      border: none;
-      font-size: 12px;
-      color: #ccc;
-      cursor: pointer;
-      font-family: inherit;
-      text-decoration: underline;
-      padding: 0;
+      background: none; border: none; font-size: 12px; color: #ccc;
+      cursor: pointer; font-family: inherit; text-decoration: underline; padding: 0;
     }
-
     .sign-out-btn:hover { color: #999; }
   </style>
 </head>
 <body>
 
-  <!-- Loading screen -->
   <div class="screen" id="loading-screen">
-    <p style="color:#bbb; margin:0">Loading…</p>
+    <p style="color:#bbb;margin:0">Loading…</p>
   </div>
 
-  <!-- Sign-in screen -->
   <div class="screen" id="signin-screen" style="display:none">
     <h2>What should I do?</h2>
     <p>Sign in to access your activity list.</p>
@@ -241,7 +194,6 @@
     </button>
   </div>
 
-  <!-- Main app -->
   <div class="container" style="opacity:0;transition:opacity 0.3s" id="app">
     <div class="header">
       <div>
@@ -281,19 +233,20 @@
       appId: "1:30536291883:web:b2ce8618a86887e9a1fc6e"
     };
 
+    // Each activity: { label: string, children?: string[] }
     const DEFAULT_ACTIVITIES = [
-      "Go for a walk",
-      "Read a book",
-      "Do a crossword puzzle",
-      "Stretch for 10 minutes",
-      "Call a friend",
-      "Cook something new",
-      "Watch a documentary",
-      "Sketch or doodle",
-      "Listen to an album start to finish",
-      "Organize one drawer",
-      "Journal for 5 minutes",
-      "Do a math puzzle",
+      { label: "Go for a walk" },
+      { label: "Read a book" },
+      { label: "Do a crossword puzzle" },
+      { label: "Stretch for 10 minutes" },
+      { label: "Call a friend" },
+      { label: "Cook something new" },
+      { label: "Watch a documentary" },
+      { label: "Sketch or doodle" },
+      { label: "Listen to an album start to finish" },
+      { label: "Organize one drawer" },
+      { label: "Journal for 5 minutes" },
+      { label: "Do a math puzzle" },
     ];
 
     const app = initializeApp(firebaseConfig);
@@ -301,23 +254,22 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    let activities = [];
-    let queue = [];
-    let current = null;
+    // State
+    let activities = [];       // array of { label, children? }
+    let topQueue = [];         // shuffled top-level indices not yet visited
+    let currentTop = null;     // current top-level activity object
+    let childQueue = [];       // shuffled children not yet shown
+    let currentChild = null;   // current child string (or null if top-level only)
     let editOpen = false;
+    let expandedItems = new Set(); // indices of expanded items in edit list
     let saveTimer = null;
     let unsubscribeSnapshot = null;
     window._done = false;
 
     // --- Auth ---
     document.getElementById('signin-btn').onclick = async () => {
-      try {
-        await signInWithPopup(auth, provider);
-      } catch(e) {
-        console.error('Sign in failed', e);
-      }
+      try { await signInWithPopup(auth, provider); } catch(e) { console.error(e); }
     };
-
     document.getElementById('signout-btn').onclick = async () => {
       if (unsubscribeSnapshot) unsubscribeSnapshot();
       await signOut(auth);
@@ -325,13 +277,11 @@
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // Signed in
         document.getElementById('loading-screen').style.display = 'none';
         document.getElementById('signin-screen').style.display = 'none';
         document.getElementById('app').style.opacity = '1';
         await initData(user.uid);
       } else {
-        // Signed out
         if (unsubscribeSnapshot) unsubscribeSnapshot();
         document.getElementById('loading-screen').style.display = 'none';
         document.getElementById('app').style.opacity = '0';
@@ -342,11 +292,10 @@
     // --- Firestore ---
     async function initData(uid) {
       const docRef = doc(db, "users", uid, "data", "activities");
-
       try {
         const snap = await getDoc(docRef);
         if (snap.exists() && Array.isArray(snap.data().list) && snap.data().list.length > 0) {
-          activities = snap.data().list;
+          activities = migrateLegacy(snap.data().list);
         } else {
           activities = [...DEFAULT_ACTIVITIES];
           await setDoc(docRef, { list: activities });
@@ -360,13 +309,12 @@
 
       unsubscribeSnapshot = onSnapshot(docRef, (snap) => {
         if (snap.exists() && Array.isArray(snap.data().list)) {
-          activities = snap.data().list;
+          activities = migrateLegacy(snap.data().list);
           render();
           setStatus('synced');
         }
       });
 
-      // Save function scoped to this user's doc
       window._saveToFirestore = async () => {
         clearTimeout(saveTimer);
         setStatus('syncing');
@@ -374,21 +322,24 @@
           try {
             await setDoc(docRef, { list: activities });
             setStatus('synced');
-          } catch(e) {
-            setStatus('error');
-          }
+          } catch(e) { setStatus('error'); }
         }, 500);
       };
     }
+
+    // Migrate flat string arrays from old schema
+    function migrateLegacy(list) {
+      return list.map(item =>
+        typeof item === 'string' ? { label: item } : item
+      );
+    }
+
+    function saveToFirestore() { if (window._saveToFirestore) window._saveToFirestore(); }
 
     function setStatus(s) {
       const el = document.getElementById('save-status');
       el.className = 'save-status' + (s === 'error' ? ' error' : s === 'syncing' ? ' syncing' : '');
       el.textContent = s === 'syncing' ? 'Syncing…' : s === 'error' ? 'Sync failed' : '✓ Synced';
-    }
-
-    function saveToFirestore() {
-      if (window._saveToFirestore) window._saveToFirestore();
     }
 
     // --- Shuffle ---
@@ -401,30 +352,101 @@
       return a;
     }
 
-    function escHtml(s) {
-      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    // --- Suggestion logic ---
+    // Pick next top-level item; if it has children, pick first child too
+    function pickNextTop(queue) {
+      let q = queue.length > 0 ? queue : shuffle(activities.map((_, i) => i));
+      const idx = q[0];
+      const rest = q.slice(1);
+      const item = activities[idx];
+      currentTop = item;
+      topQueue = rest;
+
+      if (item.children && item.children.length > 0) {
+        const cq = shuffle([...item.children]);
+        currentChild = cq[0];
+        childQueue = cq.slice(1);
+      } else {
+        currentChild = null;
+        childQueue = [];
+      }
+      window._done = false;
+    }
+
+    function handleStart() {
+      if (activities.length === 0) return;
+      pickNextTop([]);
+      render();
+    }
+
+    function handleNope() {
+      if (activities.length === 0) return;
+
+      if (currentTop && currentTop.children && currentTop.children.length > 0) {
+        // Still children left in this category?
+        if (childQueue.length > 0) {
+          currentChild = childQueue[0];
+          childQueue = childQueue.slice(1);
+          render();
+          return;
+        }
+        // Exhausted all children — move to next top-level
+      }
+
+      // Move to next top-level
+      if (topQueue.length === 0 && currentTop !== null) {
+        // Exhausted all top-level items
+        currentTop = null;
+        currentChild = null;
+        window._done = true;
+        render();
+        return;
+      }
+      pickNextTop(topQueue);
+      render();
+    }
+
+    function handleYep() {
+      currentTop = null; currentChild = null;
+      topQueue = []; childQueue = [];
+      window._done = false;
+      render();
     }
 
     // --- Render ---
+    function escHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
     function render() {
-      document.getElementById('count').textContent = activities.length + ' activities in your list';
+      const total = activities.length;
+      document.getElementById('count').textContent = total + ' activit' + (total === 1 ? 'y' : 'ies') + ' in your list';
       renderCard();
       renderList();
       document.getElementById('toggle-btn').textContent =
-        editOpen ? 'Hide list' : `Edit list (${activities.length})`;
+        editOpen ? 'Hide list' : `Edit list (${total})`;
     }
 
     function renderCard() {
       const card = document.getElementById('card');
-      if (current) {
+
+      if (currentTop) {
+        const hasCategory = currentChild !== null;
+        const mainText = hasCategory ? currentChild : currentTop.label;
+        const categoryHtml = hasCategory
+          ? `<p class="suggestion-category">${escHtml(currentTop.label)}</p>`
+          : '';
+
         card.innerHTML = `
-          <p class="suggestion">${escHtml(current)}</p>
+          ${categoryHtml}
+          <p class="suggestion">${escHtml(mainText)}</p>
           <div class="btn-row">
             <button class="btn-success" id="yep-btn">Sounds good</button>
             <button class="btn-ghost" id="nope-btn">Nope, next</button>
           </div>`;
         document.getElementById('yep-btn').onclick = handleYep;
         document.getElementById('nope-btn').onclick = handleNope;
+
       } else if (window._done) {
         card.innerHTML = `
           <p class="done-msg">You've seen everything. Starting over.</p>
@@ -432,6 +454,7 @@
             <button class="btn-primary" id="again-btn">Go again</button>
           </div>`;
         document.getElementById('again-btn').onclick = handleStart;
+
       } else {
         card.innerHTML = `
           <p class="card-hint">Press the button when you're not sure what to do.</p>
@@ -446,47 +469,72 @@
       const ul = document.getElementById('activity-list');
       if (!editOpen) { ul.style.display = 'none'; return; }
       ul.style.display = 'block';
+
       if (activities.length === 0) {
         ul.innerHTML = '<li class="empty-msg">No activities yet.</li>';
         return;
       }
-      ul.innerHTML = activities.map((a, i) => `
-        <li>
-          <span>${escHtml(a)}</span>
-          <button class="remove-btn" data-i="${i}">×</button>
-        </li>`).join('');
-      ul.querySelectorAll('.remove-btn').forEach(btn => {
+
+      ul.innerHTML = activities.map((item, i) => {
+        const isExpanded = expandedItems.has(i);
+        const childCount = item.children ? item.children.length : 0;
+        const expandIcon = isExpanded ? '▾' : '▸';
+
+        const childrenHtml = isExpanded ? `
+          <div class="children-section">
+            ${(item.children || []).map((c, ci) => `
+              <div class="child-item">
+                <span>${escHtml(c)}</span>
+                <button class="remove-btn" data-i="${i}" data-ci="${ci}" style="font-size:16px">×</button>
+              </div>`).join('')}
+            <div class="child-add-row">
+              <input type="text" id="child-input-${i}" placeholder="Add option…"
+                onkeydown="if(event.key==='Enter') window._addChild(${i})" />
+              <button class="btn-small" onclick="window._addChild(${i})">Add</button>
+            </div>
+          </div>` : '';
+
+        return `
+          <li class="activity-item">
+            <div class="activity-row">
+              <div class="activity-row-left">
+                <button class="expand-btn" data-i="${i}">${expandIcon}</button>
+                <span class="activity-label">${escHtml(item.label)}</span>
+                ${childCount > 0 ? `<span class="child-count">${childCount} option${childCount !== 1 ? 's' : ''}</span>` : ''}
+              </div>
+              <button class="remove-btn" data-i="${i}">×</button>
+            </div>
+            ${childrenHtml}
+          </li>`;
+      }).join('');
+
+      // Expand/collapse
+      ul.querySelectorAll('.expand-btn').forEach(btn => {
+        btn.onclick = () => {
+          const i = parseInt(btn.dataset.i);
+          if (expandedItems.has(i)) expandedItems.delete(i);
+          else expandedItems.add(i);
+          renderList();
+        };
+      });
+
+      // Remove top-level
+      ul.querySelectorAll('.activity-row > .remove-btn').forEach(btn => {
         btn.onclick = () => handleRemove(parseInt(btn.dataset.i));
+      });
+
+      // Remove child
+      ul.querySelectorAll('.child-item .remove-btn').forEach(btn => {
+        btn.onclick = () => handleRemoveChild(parseInt(btn.dataset.i), parseInt(btn.dataset.ci));
       });
     }
 
     // --- Actions ---
-    function getNext(q) {
-      if (activities.length === 0) return;
-      if (q.length === 0) q = shuffle(activities);
-      current = q[0];
-      queue = q.slice(1);
-      window._done = false;
-    }
-
-    function handleStart() { getNext([]); render(); }
-
-    function handleNope() {
-      if (queue.length === 0 && current) {
-        current = null; window._done = true;
-      } else {
-        getNext(queue);
-      }
-      render();
-    }
-
-    function handleYep() { current = null; queue = []; window._done = false; render(); }
-
     function handleAdd() {
       const input = document.getElementById('new-item');
       const val = input.value.trim();
-      if (!val || activities.includes(val)) return;
-      activities.push(val);
+      if (!val || activities.some(a => a.label === val)) return;
+      activities.push({ label: val });
       input.value = '';
       input.focus();
       saveToFirestore();
@@ -496,20 +544,52 @@
     function handleRemove(i) {
       const removed = activities[i];
       activities.splice(i, 1);
-      if (current === removed) { current = null; queue = []; }
+      expandedItems.delete(i);
+      // Rebuild expandedItems with shifted indices
+      const newExpanded = new Set();
+      expandedItems.forEach(idx => { if (idx < i) newExpanded.add(idx); else if (idx > i) newExpanded.add(idx - 1); });
+      expandedItems.clear();
+      newExpanded.forEach(idx => expandedItems.add(idx));
+
+      if (currentTop && currentTop.label === removed.label) {
+        currentTop = null; currentChild = null; topQueue = []; childQueue = [];
+      }
       saveToFirestore();
       render();
     }
 
-    function toggleEdit() {
+    window._addChild = function(i) {
+      const input = document.getElementById(`child-input-${i}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+      if (!activities[i].children) activities[i].children = [];
+      if (activities[i].children.includes(val)) return;
+      activities[i].children.push(val);
+      saveToFirestore();
+      renderList(); // re-render list only to keep expansion state
+      render();
+      // Re-focus after render
+      setTimeout(() => {
+        const newInput = document.getElementById(`child-input-${i}`);
+        if (newInput) newInput.focus();
+      }, 0);
+    };
+
+    function handleRemoveChild(i, ci) {
+      activities[i].children.splice(ci, 1);
+      if (activities[i].children.length === 0) delete activities[i].children;
+      saveToFirestore();
+      render();
+    }
+
+    window.handleAdd = handleAdd;
+    window.toggleEdit = function() {
       editOpen = !editOpen;
       renderList();
       document.getElementById('toggle-btn').textContent =
         editOpen ? 'Hide list' : `Edit list (${activities.length})`;
-    }
-
-    window.handleAdd = handleAdd;
-    window.toggleEdit = toggleEdit;
+    };
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js');
