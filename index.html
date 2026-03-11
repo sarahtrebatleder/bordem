@@ -28,7 +28,7 @@
     .container { max-width: 480px; width: 100%; }
 
     .header {
-      margin-bottom: 36px;
+      margin-bottom: 24px;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
@@ -40,6 +40,38 @@
     .save-status { font-size: 12px; color: #bbb; font-style: italic; white-space: nowrap; padding-bottom: 2px; }
     .save-status.error { color: #c0392b; }
     .save-status.syncing { color: #e8a020; }
+
+    /* Mode toggle */
+    .mode-toggle {
+      display: flex;
+      background: #e8e2d8;
+      border-radius: 4px;
+      padding: 3px;
+      margin-bottom: 24px;
+      gap: 2px;
+    }
+
+    .mode-btn {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      background: transparent;
+      color: #888;
+      transition: all 0.15s;
+      letter-spacing: 0.01em;
+    }
+
+    .mode-btn.active {
+      background: #fff;
+      color: #2a2a2a;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .mode-btn:active { opacity: 0.8; }
 
     .card {
       background: #fff;
@@ -59,6 +91,7 @@
     .suggestion-category { font-size: 13px; color: #aaa; margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
     .suggestion { font-size: 22px; color: #2a2a2a; margin-bottom: 28px; line-height: 1.4; }
     .done-msg { color: #999; font-size: 15px; margin-bottom: 20px; }
+    .empty-pool-msg { color: #bbb; font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
 
     .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
@@ -89,12 +122,10 @@
     /* Activity list */
     .activity-list {
       margin-top: 14px; list-style: none; border: 1px solid #e0d9cc;
-      border-radius: 4px; background: #fff; max-height: 420px; overflow-y: auto;
+      border-radius: 4px; background: #fff; max-height: 480px; overflow-y: auto;
     }
 
-    .activity-item {
-      border-bottom: 1px solid #f0ebe2;
-    }
+    .activity-item { border-bottom: 1px solid #f0ebe2; }
     .activity-item:last-child { border-bottom: none; }
 
     .activity-row {
@@ -108,13 +139,26 @@
     .expand-btn {
       background: none; border: none; color: #bbb; cursor: pointer;
       font-size: 12px; padding: 2px 4px; font-family: inherit; flex-shrink: 0;
-      transition: color 0.15s;
     }
     .expand-btn:hover { color: #888; }
 
-    .child-count {
-      font-size: 11px; color: #bbb; white-space: nowrap; flex-shrink: 0;
+    .child-count { font-size: 11px; color: #bbb; white-space: nowrap; flex-shrink: 0; }
+
+    /* Mode tag pill */
+    .mode-tag {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      border: 1px solid;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-family: inherit;
+      letter-spacing: 0.02em;
+      transition: all 0.15s;
     }
+    .mode-tag.either  { background: #f0ebe2; border-color: #d8d0c4; color: #aaa; }
+    .mode-tag.solo    { background: #e8f0ff; border-color: #b0c4ee; color: #5577cc; }
+    .mode-tag.together { background: #edf7ee; border-color: #a8d4aa; color: #3a7d44; }
 
     .remove-btn {
       background: none; border: none; color: #ccc; cursor: pointer;
@@ -122,10 +166,8 @@
     }
     .remove-btn:hover { color: #999; }
 
-    /* Children section */
     .children-section {
-      background: #faf8f4;
-      border-top: 1px solid #f0ebe2;
+      background: #faf8f4; border-top: 1px solid #f0ebe2;
       padding: 8px 16px 12px 32px;
     }
 
@@ -136,10 +178,7 @@
     }
     .child-item:last-of-type { border-bottom: none; }
 
-    .child-add-row {
-      display: flex; gap: 6px; margin-top: 8px;
-    }
-
+    .child-add-row { display: flex; gap: 6px; margin-top: 8px; }
     .child-add-row input { font-size: 13px; padding: 7px 10px; }
 
     .btn-small {
@@ -150,7 +189,6 @@
 
     .empty-msg { padding: 14px 16px; color: #bbb; font-size: 14px; font-style: italic; }
 
-    /* Screens */
     .screen {
       position: fixed; inset: 0; background: #f5f0e8;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -206,6 +244,13 @@
       </div>
     </div>
 
+    <!-- Mode toggle -->
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-either" onclick="setMode('either')">Either</button>
+      <button class="mode-btn" id="mode-solo" onclick="setMode('solo')">Solo</button>
+      <button class="mode-btn" id="mode-together" onclick="setMode('together')">With James</button>
+    </div>
+
     <div class="card" id="card"></div>
 
     <div class="add-row">
@@ -230,23 +275,23 @@
       projectId: "bordem-44e21",
       storageBucket: "bordem-44e21.firebasestorage.app",
       messagingSenderId: "30536291883",
-      appId: "1:30536291883:web:b2ce8618a86887e9a1fc6e"
+      appId: "1:30536291833:web:b2ce8618a86887e9a1fc6e"
     };
 
-    // Each activity: { label: string, children?: string[] }
+    // Each activity: { label, mode: 'either'|'solo'|'together', children?: string[] }
     const DEFAULT_ACTIVITIES = [
-      { label: "Go for a walk" },
-      { label: "Read a book" },
-      { label: "Do a crossword puzzle" },
-      { label: "Stretch for 10 minutes" },
-      { label: "Call a friend" },
-      { label: "Cook something new" },
-      { label: "Watch a documentary" },
-      { label: "Sketch or doodle" },
-      { label: "Listen to an album start to finish" },
-      { label: "Organize one drawer" },
-      { label: "Journal for 5 minutes" },
-      { label: "Do a math puzzle" },
+      { label: "Go for a walk", mode: "either" },
+      { label: "Read a book", mode: "solo" },
+      { label: "Do a crossword puzzle", mode: "either" },
+      { label: "Stretch for 10 minutes", mode: "solo" },
+      { label: "Call a friend", mode: "solo" },
+      { label: "Cook something new", mode: "either" },
+      { label: "Watch a documentary", mode: "either" },
+      { label: "Sketch or doodle", mode: "solo" },
+      { label: "Listen to an album start to finish", mode: "either" },
+      { label: "Organize one drawer", mode: "solo" },
+      { label: "Journal for 5 minutes", mode: "solo" },
+      { label: "Do a math puzzle", mode: "solo" },
     ];
 
     const app = initializeApp(firebaseConfig);
@@ -254,16 +299,16 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // State
-    let activities = [];       // array of { label, children? }
-    let topQueue = [];         // shuffled top-level indices not yet visited
-    let currentTop = null;     // current top-level activity object
-    let childQueue = [];       // shuffled children not yet shown
-    let currentChild = null;   // current child string (or null if top-level only)
+    let activities = [];
+    let topQueue = [];
+    let currentTop = null;
+    let childQueue = [];
+    let currentChild = null;
     let editOpen = false;
-    let expandedItems = new Set(); // indices of expanded items in edit list
+    let expandedItems = new Set();
     let saveTimer = null;
     let unsubscribeSnapshot = null;
+    let currentMode = 'either'; // 'either' | 'solo' | 'together'
     window._done = false;
 
     // --- Auth ---
@@ -297,11 +342,11 @@
         if (snap.exists() && Array.isArray(snap.data().list) && snap.data().list.length > 0) {
           activities = migrateLegacy(snap.data().list);
         } else {
-          activities = [...DEFAULT_ACTIVITIES];
+          activities = DEFAULT_ACTIVITIES.map(a => ({...a}));
           await setDoc(docRef, { list: activities });
         }
       } catch(e) {
-        activities = [...DEFAULT_ACTIVITIES];
+        activities = DEFAULT_ACTIVITIES.map(a => ({...a}));
         setStatus('error');
       }
 
@@ -327,11 +372,12 @@
       };
     }
 
-    // Migrate flat string arrays from old schema
     function migrateLegacy(list) {
-      return list.map(item =>
-        typeof item === 'string' ? { label: item } : item
-      );
+      return list.map(item => {
+        if (typeof item === 'string') return { label: item, mode: 'either' };
+        if (!item.mode) return { ...item, mode: 'either' };
+        return item;
+      });
     }
 
     function saveToFirestore() { if (window._saveToFirestore) window._saveToFirestore(); }
@@ -340,6 +386,28 @@
       const el = document.getElementById('save-status');
       el.className = 'save-status' + (s === 'error' ? ' error' : s === 'syncing' ? ' syncing' : '');
       el.textContent = s === 'syncing' ? 'Syncing…' : s === 'error' ? 'Sync failed' : '✓ Synced';
+    }
+
+    // --- Mode ---
+    window.setMode = function(mode) {
+      currentMode = mode;
+      // Reset suggestion state when mode changes
+      currentTop = null; currentChild = null; topQueue = []; childQueue = [];
+      window._done = false;
+      // Update toggle UI
+      ['either','solo','together'].forEach(m => {
+        document.getElementById('mode-' + m).classList.toggle('active', m === mode);
+      });
+      render();
+    };
+
+    // Filter activities by current mode
+    function filteredActivities() {
+      return activities.filter(a => {
+        const m = a.mode || 'either';
+        if (currentMode === 'either') return true;
+        return m === currentMode || m === 'either';
+      });
     }
 
     // --- Shuffle ---
@@ -353,15 +421,17 @@
     }
 
     // --- Suggestion logic ---
-    // Pick next top-level item; if it has children, pick first child too
     function pickNextTop(queue) {
-      let q = queue.length > 0 ? queue : shuffle(activities.map((_, i) => i));
+      const pool = filteredActivities();
+      if (pool.length === 0) return false;
+      let q = queue.length > 0 ? queue : shuffle(pool.map((_, i) => i));
+      if (q.length === 0) return false;
       const idx = q[0];
       const rest = q.slice(1);
-      const item = activities[idx];
+      const item = pool[idx];
+      if (!item) return false;
       currentTop = item;
       topQueue = rest;
-
       if (item.children && item.children.length > 0) {
         const cq = shuffle([...item.children]);
         currentChild = cq[0];
@@ -371,33 +441,26 @@
         childQueue = [];
       }
       window._done = false;
+      return true;
     }
 
     function handleStart() {
-      if (activities.length === 0) return;
+      if (filteredActivities().length === 0) return;
       pickNextTop([]);
       render();
     }
 
     function handleNope() {
-      if (activities.length === 0) return;
-
       if (currentTop && currentTop.children && currentTop.children.length > 0) {
-        // Still children left in this category?
         if (childQueue.length > 0) {
           currentChild = childQueue[0];
           childQueue = childQueue.slice(1);
           render();
           return;
         }
-        // Exhausted all children — move to next top-level
       }
-
-      // Move to next top-level
-      if (topQueue.length === 0 && currentTop !== null) {
-        // Exhausted all top-level items
-        currentTop = null;
-        currentChild = null;
+      if (topQueue.length === 0) {
+        currentTop = null; currentChild = null;
         window._done = true;
         render();
         return;
@@ -420,7 +483,11 @@
 
     function render() {
       const total = activities.length;
-      document.getElementById('count').textContent = total + ' activit' + (total === 1 ? 'y' : 'ies') + ' in your list';
+      const filtered = filteredActivities().length;
+      document.getElementById('count').textContent =
+        filtered === total
+          ? `${total} activit${total === 1 ? 'y' : 'ies'} in your list`
+          : `${filtered} of ${total} activit${total === 1 ? 'y' : 'ies'} in this mode`;
       renderCard();
       renderList();
       document.getElementById('toggle-btn').textContent =
@@ -429,14 +496,13 @@
 
     function renderCard() {
       const card = document.getElementById('card');
+      const pool = filteredActivities();
 
       if (currentTop) {
         const hasCategory = currentChild !== null;
         const mainText = hasCategory ? currentChild : currentTop.label;
         const categoryHtml = hasCategory
-          ? `<p class="suggestion-category">${escHtml(currentTop.label)}</p>`
-          : '';
-
+          ? `<p class="suggestion-category">${escHtml(currentTop.label)}</p>` : '';
         card.innerHTML = `
           ${categoryHtml}
           <p class="suggestion">${escHtml(mainText)}</p>
@@ -455,11 +521,15 @@
           </div>`;
         document.getElementById('again-btn').onclick = handleStart;
 
+      } else if (pool.length === 0) {
+        card.innerHTML = `
+          <p class="empty-pool-msg">No activities tagged for this mode yet.<br>Add some or update tags in your list.</p>`;
+
       } else {
         card.innerHTML = `
           <p class="card-hint">Press the button when you're not sure what to do.</p>
           <div class="btn-row">
-            <button class="btn-primary" id="suggest-btn" ${activities.length === 0 ? 'disabled' : ''}>Suggest something</button>
+            <button class="btn-primary" id="suggest-btn">Suggest something</button>
           </div>`;
         document.getElementById('suggest-btn').onclick = handleStart;
       }
@@ -479,6 +549,8 @@
         const isExpanded = expandedItems.has(i);
         const childCount = item.children ? item.children.length : 0;
         const expandIcon = isExpanded ? '▾' : '▸';
+        const mode = item.mode || 'either';
+        const modeLabel = mode === 'solo' ? 'Solo' : mode === 'together' ? 'Together' : 'Either';
 
         const childrenHtml = isExpanded ? `
           <div class="children-section">
@@ -501,6 +573,7 @@
                 <button class="expand-btn" data-i="${i}">${expandIcon}</button>
                 <span class="activity-label">${escHtml(item.label)}</span>
                 ${childCount > 0 ? `<span class="child-count">${childCount} option${childCount !== 1 ? 's' : ''}</span>` : ''}
+                <button class="mode-tag ${mode}" data-i="${i}">${modeLabel}</button>
               </div>
               <button class="remove-btn" data-i="${i}">×</button>
             </div>
@@ -514,6 +587,18 @@
           const i = parseInt(btn.dataset.i);
           if (expandedItems.has(i)) expandedItems.delete(i);
           else expandedItems.add(i);
+          renderList();
+        };
+      });
+
+      // Cycle mode tag: either → solo → together → either
+      ul.querySelectorAll('.mode-tag').forEach(btn => {
+        btn.onclick = () => {
+          const i = parseInt(btn.dataset.i);
+          const current = activities[i].mode || 'either';
+          const next = current === 'either' ? 'solo' : current === 'solo' ? 'together' : 'either';
+          activities[i].mode = next;
+          saveToFirestore();
           renderList();
         };
       });
@@ -534,7 +619,8 @@
       const input = document.getElementById('new-item');
       const val = input.value.trim();
       if (!val || activities.some(a => a.label === val)) return;
-      activities.push({ label: val });
+      // New activities default to current mode (if not 'either', otherwise 'either')
+      activities.push({ label: val, mode: 'either' });
       input.value = '';
       input.focus();
       saveToFirestore();
@@ -544,13 +630,13 @@
     function handleRemove(i) {
       const removed = activities[i];
       activities.splice(i, 1);
-      expandedItems.delete(i);
-      // Rebuild expandedItems with shifted indices
       const newExpanded = new Set();
-      expandedItems.forEach(idx => { if (idx < i) newExpanded.add(idx); else if (idx > i) newExpanded.add(idx - 1); });
+      expandedItems.forEach(idx => {
+        if (idx < i) newExpanded.add(idx);
+        else if (idx > i) newExpanded.add(idx - 1);
+      });
       expandedItems.clear();
       newExpanded.forEach(idx => expandedItems.add(idx));
-
       if (currentTop && currentTop.label === removed.label) {
         currentTop = null; currentChild = null; topQueue = []; childQueue = [];
       }
@@ -567,9 +653,7 @@
       if (activities[i].children.includes(val)) return;
       activities[i].children.push(val);
       saveToFirestore();
-      renderList(); // re-render list only to keep expansion state
       render();
-      // Re-focus after render
       setTimeout(() => {
         const newInput = document.getElementById(`child-input-${i}`);
         if (newInput) newInput.focus();
