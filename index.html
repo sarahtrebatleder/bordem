@@ -491,6 +491,17 @@
       render();
     }
 
+    function handleNewTop() {
+      if (topQueue.length === 0) {
+        currentTop = null; currentChild = null;
+        window._done = true;
+        render();
+        return;
+      }
+      pickNextTop(topQueue);
+      render();
+    }
+
     // --- Render ---
     function escHtml(s) {
       return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -518,15 +529,19 @@
         const mainText = hasCategory ? currentChild : currentTop.label;
         const categoryHtml = hasCategory
           ? `<p class="suggestion-category">${escHtml(currentTop.label)}</p>` : '';
+        const newTopBtn = hasCategory
+          ? `<button class="btn-ghost" id="newtop-btn">New activity</button>` : '';
         card.innerHTML = `
           ${categoryHtml}
           <p class="suggestion">${escHtml(mainText)}</p>
           <div class="btn-row">
             <button class="btn-success" id="yep-btn">Sounds good</button>
             <button class="btn-ghost" id="nope-btn">Nope, next</button>
+            ${newTopBtn}
           </div>`;
         document.getElementById('yep-btn').onclick = handleYep;
         document.getElementById('nope-btn').onclick = handleNope;
+        if (hasCategory) document.getElementById('newtop-btn').onclick = handleNewTop;
 
       } else if (window._done) {
         card.innerHTML = `
