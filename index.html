@@ -21,21 +21,33 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: env(safe-area-inset-top, 24px) 24px env(safe-area-inset-bottom, 24px);
-      padding-top: max(env(safe-area-inset-top), 48px);
     }
 
-    .container { max-width: 480px; width: 100%; }
+    .top-band {
+      width: 100%;
+      background: var(--bg, #f5f0e8);
+      padding: max(env(safe-area-inset-top), 48px) 24px 20px;
+    }
 
-    .header {
-      margin-bottom: 24px;
+    .top-band-inner {
+      max-width: 480px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
     }
 
+    .container {
+      max-width: 480px;
+      width: 100%;
+      background: #f5f0e8;
+      padding: 24px 24px env(safe-area-inset-bottom, 24px);
+      flex: 1;
+      position: relative;
+    }
+
     h1 { font-size: 26px; font-weight: normal; letter-spacing: 0.02em; color: #2a2a2a; }
-    .subtitle { color: #999; margin-top: 5px; font-size: 13px; }
+    .subtitle { color: #999; font-size: 13px; }
 
     .save-status { font-size: 12px; color: #bbb; font-style: italic; white-space: nowrap; padding-bottom: 2px; }
     .save-status.error { color: #c0392b; }
@@ -203,7 +215,7 @@
     .empty-msg { padding: 14px 16px; color: #bbb; font-size: 14px; font-style: italic; }
 
     #color-label {
-      position: fixed;
+      position: absolute;
       bottom: max(env(safe-area-inset-bottom), 12px);
       right: 16px;
       font-family: Georgia, serif;
@@ -211,7 +223,6 @@
       color: rgba(0,0,0,0.28);
       letter-spacing: 0.04em;
       pointer-events: none;
-      z-index: 100;
     }
 
     .screen {
@@ -239,8 +250,6 @@
 </head>
 <body>
 
-  <div id="color-label"></div>
-
   <script>
     (function() {
       var colors = [
@@ -263,7 +272,7 @@
       localStorage.setItem('paintColorIdx', nextIdx);
       var color = colors[nextIdx];
       document.documentElement.style.setProperty('--bg', color.hex);
-      document.getElementById('color-label').textContent = color.name;
+      document.getElementById('color-label').textContent = 'Color: ' + color.name;
     })();
   </script>
 
@@ -285,12 +294,16 @@
     </button>
   </div>
 
+  <div class="top-band" id="top-band" style="opacity:0;transition:opacity 0.3s">
+    <div class="top-band-inner">
+      <h1>What should I do?</h1>
+    </div>
+  </div>
+
   <div class="container" style="opacity:0;transition:opacity 0.3s" id="app">
-    <div class="header">
-      <div>
-        <h1>What should I do?</h1>
-        <p class="subtitle" id="count"></p>
-      </div>
+    <div id="color-label"></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px">
+      <p class="subtitle" id="count"></p>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
         <span class="save-status" id="save-status">✓ Synced</span>
         <button class="sign-out-btn" id="signout-btn">Sign out</button>
@@ -385,11 +398,13 @@
         document.getElementById('loading-screen').style.display = 'none';
         document.getElementById('signin-screen').style.display = 'none';
         document.getElementById('app').style.opacity = '1';
+        document.getElementById('top-band').style.opacity = '1';
         await initData(user.uid);
       } else {
         if (unsubscribeSnapshot) unsubscribeSnapshot();
         document.getElementById('loading-screen').style.display = 'none';
         document.getElementById('app').style.opacity = '0';
+        document.getElementById('top-band').style.opacity = '0';
         document.getElementById('signin-screen').style.display = 'flex';
       }
     });
