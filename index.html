@@ -14,7 +14,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: #f5f0e8;
+      background: var(--bg, #f5f0e8);
       font-family: Georgia, 'Times New Roman', serif;
       min-height: 100vh;
       min-height: 100dvh;
@@ -202,8 +202,20 @@
 
     .empty-msg { padding: 14px 16px; color: #bbb; font-size: 14px; font-style: italic; }
 
+    #color-label {
+      position: fixed;
+      bottom: max(env(safe-area-inset-bottom), 12px);
+      right: 16px;
+      font-family: Georgia, serif;
+      font-size: 11px;
+      color: rgba(0,0,0,0.28);
+      letter-spacing: 0.04em;
+      pointer-events: none;
+      z-index: 100;
+    }
+
     .screen {
-      position: fixed; inset: 0; background: #f5f0e8;
+      position: fixed; inset: 0; background: var(--bg, #f5f0e8);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       font-family: Georgia, serif; z-index: 10; padding: 24px; text-align: center;
     }
@@ -226,6 +238,34 @@
   </style>
 </head>
 <body>
+
+  <div id="color-label"></div>
+
+  <script>
+    (function() {
+      var colors = [
+        { name: 'Refresh',      hex: '#9FD3C7' },
+        { name: 'Aloe',         hex: '#ACCABC' },
+        { name: 'Watery',       hex: '#B4CCCC' },
+        { name: 'Tidewater',    hex: '#C3D7D3' },
+        { name: 'Copen Blue',   hex: '#C2CCC4' },
+        { name: 'Sea Salt',     hex: '#CDD2CA' },
+        { name: 'Passive',      hex: '#C4C4BF' },
+        { name: 'Icicle',       hex: '#DBDFE0' },
+        { name: 'Upward',       hex: '#BFC9D0' },
+        { name: 'Krypton',      hex: '#B8C0C3' },
+        { name: 'Morning Fog',  hex: '#A8AEB1' },
+        { name: 'Blissful Blue',hex: '#B2C8D8' },
+        { name: 'Honest Blue',  hex: '#B1C7D3' }
+      ];
+      var stored = localStorage.getItem('paintColorIdx');
+      var nextIdx = stored === null ? 0 : (parseInt(stored, 10) + 1) % colors.length;
+      localStorage.setItem('paintColorIdx', nextIdx);
+      var color = colors[nextIdx];
+      document.documentElement.style.setProperty('--bg', color.hex);
+      document.getElementById('color-label').textContent = color.name;
+    })();
+  </script>
 
   <div class="screen" id="loading-screen">
     <p style="color:#bbb;margin:0">Loading…</p>
