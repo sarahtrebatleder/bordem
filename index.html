@@ -23,22 +23,27 @@
       align-items: center;
     }
 
+    .top-band {
+      width: 100%;
+      background: var(--bg, #f5f0e8);
+      padding: max(env(safe-area-inset-top), 48px) 24px 20px;
+    }
+
+    .top-band-inner {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
     .container {
       max-width: 480px;
       width: 100%;
       background: #f5f0e8;
-      padding: env(safe-area-inset-top, 24px) 24px env(safe-area-inset-bottom, 24px);
-      padding-top: max(env(safe-area-inset-top), 48px);
-      min-height: 100vh;
-      min-height: 100dvh;
+      padding: 24px 24px env(safe-area-inset-bottom, 24px);
+      flex: 1;
       position: relative;
-    }
-
-    .header {
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
     }
 
     h1 { font-size: 26px; font-weight: normal; letter-spacing: 0.02em; color: #2a2a2a; }
@@ -267,7 +272,7 @@
       localStorage.setItem('paintColorIdx', nextIdx);
       var color = colors[nextIdx];
       document.documentElement.style.setProperty('--bg', color.hex);
-      document.getElementById('color-label').textContent = color.name;
+      document.getElementById('color-label').textContent = 'Color: ' + color.name;
     })();
   </script>
 
@@ -289,9 +294,8 @@
     </button>
   </div>
 
-  <div class="container" style="opacity:0;transition:opacity 0.3s" id="app">
-    <div id="color-label"></div>
-    <div class="header">
+  <div class="top-band" id="top-band" style="opacity:0;transition:opacity 0.3s">
+    <div class="top-band-inner">
       <div>
         <h1>What should I do?</h1>
         <p class="subtitle" id="count"></p>
@@ -301,6 +305,10 @@
         <button class="sign-out-btn" id="signout-btn">Sign out</button>
       </div>
     </div>
+  </div>
+
+  <div class="container" style="opacity:0;transition:opacity 0.3s" id="app">
+    <div id="color-label"></div>
 
     <!-- Mode toggle -->
     <div class="mode-toggle">
@@ -390,11 +398,13 @@
         document.getElementById('loading-screen').style.display = 'none';
         document.getElementById('signin-screen').style.display = 'none';
         document.getElementById('app').style.opacity = '1';
+        document.getElementById('top-band').style.opacity = '1';
         await initData(user.uid);
       } else {
         if (unsubscribeSnapshot) unsubscribeSnapshot();
         document.getElementById('loading-screen').style.display = 'none';
         document.getElementById('app').style.opacity = '0';
+        document.getElementById('top-band').style.opacity = '0';
         document.getElementById('signin-screen').style.display = 'flex';
       }
     });
