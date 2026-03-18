@@ -440,11 +440,43 @@
       return a;
     }
 
+    // --- Daily suggestion tracking ---
+    function todayKey() {
+      return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    }
+
+    function getAcceptedToday() {
+      try {
+        const stored = JSON.parse(localStorage.getItem('acceptedSuggestions') || '{}');
+        if (stored.date === todayKey()) return new Set(stored.labels || []);
+      } catch(e) {}
+      return new Set();
+    }
+
+    function markAcceptedToday(label) {
+      try {
+        const key = todayKey();
+        const stored = JSON.parse(localStorage.getItem('acceptedSuggestions') || '{}');
+        const labels = stored.date === key ? (stored.labels || []) : [];
+        if (!labels.includes(label)) labels.push(label);
+        localStorage.setItem('acceptedSuggestions', JSON.stringify({ date: key, labels }));
+      } catch(e) {}
+    }
+
     // --- Suggestion logic ---
     function pickNextTop(queue) {
       const pool = filteredActivities();
       if (pool.length === 0) return false;
-      let q = queue.length > 0 ? queue : shuffle(pool.map((_, i) => i));
+      let q;
+      if (queue.length > 0) {
+        q = queue;
+      } else {
+        // Fresh start: exclude already-accepted suggestions for today
+        const accepted = getAcceptedToday();
+        const available = pool.map((_, i) => i).filter(i => !accepted.has(pool[i].label));
+        // If all have been accepted today, use the full pool (cycle complete)
+        q = shuffle(available.length > 0 ? available : pool.map((_, i) => i));
+      }
       if (q.length === 0) return false;
       const idx = q[0];
       const rest = q.slice(1);
@@ -490,6 +522,7 @@
     }
 
     function handleYep() {
+      if (currentTop) markAcceptedToday(currentTop.label);
       currentTop = null; currentChild = null;
       topQueue = []; childQueue = [];
       window._done = false;
