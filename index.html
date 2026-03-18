@@ -47,11 +47,11 @@
     }
 
     h1 { font-size: 26px; font-weight: normal; letter-spacing: 0.02em; color: #2a2a2a; }
-    .subtitle { color: #2a2a2a; margin-top: 5px; font-size: 13px; }
+    .subtitle { color: #999; font-size: 13px; }
 
-    .save-status { font-size: 12px; color: #2a2a2a; font-style: italic; white-space: nowrap; padding-bottom: 2px; }
+    .save-status { font-size: 12px; color: #bbb; font-style: italic; white-space: nowrap; padding-bottom: 2px; }
     .save-status.error { color: #c0392b; }
-    .save-status.syncing { color: #2a2a2a; }
+    .save-status.syncing { color: #e8a020; }
 
     /* Mode toggle */
     .mode-toggle {
@@ -296,19 +296,19 @@
 
   <div class="top-band" id="top-band" style="opacity:0;transition:opacity 0.3s">
     <div class="top-band-inner">
-      <div>
-        <h1>What should I do?</h1>
-        <p class="subtitle" id="count"></p>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-        <span class="save-status" id="save-status">✓ Synced</span>
-        <button class="sign-out-btn" id="signout-btn">Sign out</button>
-      </div>
+      <h1>What should I do?</h1>
     </div>
   </div>
 
   <div class="container" style="opacity:0;transition:opacity 0.3s" id="app">
     <div id="color-label"></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px">
+      <p class="subtitle" id="count"></p>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="save-status" id="save-status">✓ Synced</span>
+        <button class="sign-out-btn" id="signout-btn">Sign out</button>
+      </div>
+    </div>
 
     <!-- Mode toggle -->
     <div class="mode-toggle">
