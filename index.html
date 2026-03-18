@@ -6,15 +6,16 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="What to Do" />
-  <meta name="theme-color" content="#f5f0e8" />
+  <meta name="theme-color" content="#9FD3C7" />
   <title>What to Do</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <style>
+    :root { --bg: #9FD3C7; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: var(--bg, #f5f0e8);
+      background: var(--bg);
       font-family: Georgia, 'Times New Roman', serif;
       min-height: 100vh;
       min-height: 100dvh;
@@ -25,7 +26,7 @@
 
     .top-band {
       width: 100%;
-      background: var(--bg, #f5f0e8);
+      background: var(--bg);
       padding: max(env(safe-area-inset-top), 48px) 24px 20px;
     }
 
@@ -40,23 +41,22 @@
     .container {
       max-width: 480px;
       width: 100%;
-      background: #f5f0e8;
       padding: 24px 24px env(safe-area-inset-bottom, 24px);
       flex: 1;
       position: relative;
     }
 
     h1 { font-size: 26px; font-weight: normal; letter-spacing: 0.02em; color: #2a2a2a; }
-    .subtitle { color: #999; font-size: 13px; }
+    .subtitle { color: #4a8a80; font-size: 13px; }
 
-    .save-status { font-size: 12px; color: #bbb; font-style: italic; white-space: nowrap; padding-bottom: 2px; }
+    .save-status { font-size: 12px; color: #5a9e93; font-style: italic; white-space: nowrap; padding-bottom: 2px; }
     .save-status.error { color: #c0392b; }
-    .save-status.syncing { color: #e8a020; }
+    .save-status.syncing { color: #c07a10; }
 
     /* Mode toggle */
     .mode-toggle {
       display: flex;
-      background: #e8e2d8;
+      background: rgba(0,0,0,0.12);
       border-radius: 4px;
       padding: 3px;
       margin-bottom: 24px;
@@ -87,7 +87,7 @@
 
     .card {
       background: #fff;
-      border: 1px solid #e0d9cc;
+      border: 1px solid rgba(0,0,0,0.1);
       border-radius: 6px;
       padding: 36px 28px;
       margin-bottom: 28px;
@@ -125,32 +125,32 @@
 
     .add-row { display: flex; gap: 8px; margin-bottom: 8px; }
     .add-mode-picker { display: flex; align-items: center; gap: 6px; margin-bottom: 16px; }
-    .add-mode-label { font-size: 12px; color: #999; margin-right: 2px; }
+    .add-mode-label { font-size: 12px; color: #4a8a80; margin-right: 2px; }
     .add-mode-btn {
       padding: 4px 12px; font-size: 12px; font-family: inherit;
-      border: 1px solid #d8d0c4; border-radius: 3px; cursor: pointer;
-      background: transparent; color: #888; transition: all 0.15s;
+      border: 1px solid rgba(0,0,0,0.2); border-radius: 3px; cursor: pointer;
+      background: transparent; color: #3a6b63; transition: all 0.15s;
     }
-    .add-mode-btn.active { background: #fff; color: #2a2a2a; border-color: #a09080; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .add-mode-btn.active { background: #fff; color: #2a2a2a; border-color: rgba(0,0,0,0.3); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
     .add-row input, .child-add-row input {
-      flex: 1; padding: 10px 14px; border: 1px solid #d8d0c4; border-radius: 3px;
-      font-size: 14px; font-family: inherit; background: #faf8f4; color: #2a2a2a; outline: none;
+      flex: 1; padding: 10px 14px; border: 1px solid rgba(0,0,0,0.2); border-radius: 3px;
+      font-size: 14px; font-family: inherit; background: rgba(255,255,255,0.75); color: #2a2a2a; outline: none;
     }
-    .add-row input:focus, .child-add-row input:focus { border-color: #a09080; }
+    .add-row input:focus, .child-add-row input:focus { border-color: rgba(0,0,0,0.35); }
 
     .toggle-link {
-      background: none; border: none; font-size: 13px; color: #999;
+      background: none; border: none; font-size: 13px; color: #3a6b63;
       cursor: pointer; padding: 0; text-decoration: underline; font-family: inherit;
     }
 
     /* Activity list */
     .activity-list {
-      margin-top: 14px; list-style: none; border: 1px solid #e0d9cc;
+      margin-top: 14px; list-style: none; border: 1px solid rgba(0,0,0,0.1);
       border-radius: 4px; background: #fff; max-height: 480px; overflow-y: auto;
     }
 
-    .activity-item { border-bottom: 1px solid #f0ebe2; }
+    .activity-item { border-bottom: 1px solid rgba(0,0,0,0.06); }
     .activity-item:last-child { border-bottom: none; }
 
     .activity-row {
@@ -181,7 +181,7 @@
       letter-spacing: 0.02em;
       transition: all 0.15s;
     }
-    .mode-tag.either  { background: #f0ebe2; border-color: #d8d0c4; color: #aaa; }
+    .mode-tag.either  { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.12); color: #777; }
     .mode-tag.solo    { background: #e8f0ff; border-color: #b0c4ee; color: #5577cc; }
     .mode-tag.together { background: #edf7ee; border-color: #a8d4aa; color: #3a7d44; }
 
@@ -192,14 +192,14 @@
     .remove-btn:hover { color: #999; }
 
     .children-section {
-      background: #faf8f4; border-top: 1px solid #f0ebe2;
+      background: rgba(0,0,0,0.03); border-top: 1px solid rgba(0,0,0,0.06);
       padding: 8px 16px 12px 32px;
     }
 
     .child-item {
       display: flex; justify-content: space-between; align-items: center;
       padding: 6px 0; font-size: 13px; color: #555;
-      border-bottom: 1px solid #f0ebe2;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
     }
     .child-item:last-of-type { border-bottom: none; }
 
@@ -214,19 +214,8 @@
 
     .empty-msg { padding: 14px 16px; color: #bbb; font-size: 14px; font-style: italic; }
 
-    #color-label {
-      position: absolute;
-      bottom: max(env(safe-area-inset-bottom), 12px);
-      right: 16px;
-      font-family: Georgia, serif;
-      font-size: 11px;
-      color: rgba(0,0,0,0.28);
-      letter-spacing: 0.04em;
-      pointer-events: none;
-    }
-
     .screen {
-      position: fixed; inset: 0; background: var(--bg, #f5f0e8);
+      position: fixed; inset: 0; background: var(--bg);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       font-family: Georgia, serif; z-index: 10; padding: 24px; text-align: center;
     }
@@ -242,39 +231,13 @@
     .btn-google:hover { opacity: 0.8; }
 
     .sign-out-btn {
-      background: none; border: none; font-size: 12px; color: #ccc;
+      background: none; border: none; font-size: 12px; color: #5a9e93;
       cursor: pointer; font-family: inherit; text-decoration: underline; padding: 0;
     }
-    .sign-out-btn:hover { color: #999; }
+    .sign-out-btn:hover { color: #3a6b63; }
   </style>
 </head>
 <body>
-
-  <script>
-    (function() {
-      var colors = [
-        { name: 'Refresh',      hex: '#9FD3C7' },
-        { name: 'Aloe',         hex: '#ACCABC' },
-        { name: 'Watery',       hex: '#B4CCCC' },
-        { name: 'Tidewater',    hex: '#C3D7D3' },
-        { name: 'Copen Blue',   hex: '#C2CCC4' },
-        { name: 'Sea Salt',     hex: '#CDD2CA' },
-        { name: 'Passive',      hex: '#C4C4BF' },
-        { name: 'Icicle',       hex: '#DBDFE0' },
-        { name: 'Upward',       hex: '#BFC9D0' },
-        { name: 'Krypton',      hex: '#B8C0C3' },
-        { name: 'Morning Fog',  hex: '#A8AEB1' },
-        { name: 'Blissful Blue',hex: '#B2C8D8' },
-        { name: 'Honest Blue',  hex: '#B1C7D3' }
-      ];
-      var stored = localStorage.getItem('paintColorIdx');
-      var nextIdx = stored === null ? 0 : (parseInt(stored, 10) + 1) % colors.length;
-      localStorage.setItem('paintColorIdx', nextIdx);
-      var color = colors[nextIdx];
-      document.documentElement.style.setProperty('--bg', color.hex);
-      document.getElementById('color-label').textContent = 'Color: ' + color.name;
-    })();
-  </script>
 
   <div class="screen" id="loading-screen">
     <p style="color:#bbb;margin:0">Loading…</p>
@@ -301,7 +264,6 @@
   </div>
 
   <div class="container" style="opacity:0;transition:opacity 0.3s" id="app">
-    <div id="color-label"></div>
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px">
       <p class="subtitle" id="count"></p>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
