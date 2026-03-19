@@ -258,6 +258,34 @@
       cursor: pointer; font-family: inherit; text-decoration: underline; padding: 0;
     }
     .sign-out-btn:hover { color: var(--color-primary-hover); }
+
+    /* Hide desktop-left h1 on mobile; top-band h1 is used instead */
+    .desktop-left > h1 { display: none; }
+
+    @media (min-width: 769px) {
+      .top-band { display: none; }
+
+      .container {
+        max-width: none;
+        padding: 0;
+        flex: none;
+      }
+
+      .desktop-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 48px 32px;
+      }
+
+      .desktop-left > h1 { display: block; margin-bottom: 24px; }
+
+      .card { min-height: 220px; }
+
+      .activity-list { max-height: 600px; }
+    }
   </style>
 </head>
 <body>
@@ -287,36 +315,44 @@
   </div>
 
   <div class="container" style="opacity:0;transition:opacity 0.3s" id="app">
-    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px">
-      <p class="subtitle" id="count"></p>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-        <span class="save-status" id="save-status">✓ Synced</span>
-        <button class="sign-out-btn" id="signout-btn">Sign out</button>
+    <div class="desktop-layout">
+      <div class="desktop-left">
+        <h1>What should I do?</h1>
+
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px">
+          <p class="subtitle" id="count"></p>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+            <span class="save-status" id="save-status">✓ Synced</span>
+            <button class="sign-out-btn" id="signout-btn">Sign out</button>
+          </div>
+        </div>
+
+        <!-- Mode toggle -->
+        <div class="mode-toggle">
+          <button class="mode-btn" id="mode-solo" onclick="setMode('solo')">Solo</button>
+          <button class="mode-btn active" id="mode-either" onclick="setMode('either')">Either</button>
+          <button class="mode-btn" id="mode-together" onclick="setMode('together')">Together</button>
+        </div>
+
+        <div class="card" id="card"></div>
+      </div>
+
+      <div class="desktop-right">
+        <div class="add-row">
+          <input type="text" id="new-item" placeholder="Add an activity…" onkeydown="if(event.key==='Enter') handleAdd()" oninput="updateAddModePicker()" />
+          <button class="btn-primary" onclick="handleAdd()">Add</button>
+        </div>
+        <div class="add-mode-picker" id="add-mode-picker" style="display:none">
+          <span class="add-mode-label">Type:</span>
+          <button class="add-mode-btn" id="add-mode-solo" onclick="setAddMode('solo')">Solo</button>
+          <button class="add-mode-btn active" id="add-mode-either" onclick="setAddMode('either')">Either</button>
+          <button class="add-mode-btn" id="add-mode-together" onclick="setAddMode('together')">Together</button>
+        </div>
+
+        <button class="toggle-link" id="toggle-btn" onclick="toggleEdit()">Edit list</button>
+        <ul class="activity-list" id="activity-list" style="display:none"></ul>
       </div>
     </div>
-
-    <!-- Mode toggle -->
-    <div class="mode-toggle">
-      <button class="mode-btn" id="mode-solo" onclick="setMode('solo')">Solo</button>
-      <button class="mode-btn active" id="mode-either" onclick="setMode('either')">Either</button>
-      <button class="mode-btn" id="mode-together" onclick="setMode('together')">Together</button>
-    </div>
-
-    <div class="card" id="card"></div>
-
-    <div class="add-row">
-      <input type="text" id="new-item" placeholder="Add an activity…" onkeydown="if(event.key==='Enter') handleAdd()" oninput="updateAddModePicker()" />
-      <button class="btn-primary" onclick="handleAdd()">Add</button>
-    </div>
-    <div class="add-mode-picker" id="add-mode-picker" style="display:none">
-      <span class="add-mode-label">Type:</span>
-      <button class="add-mode-btn" id="add-mode-solo" onclick="setAddMode('solo')">Solo</button>
-      <button class="add-mode-btn active" id="add-mode-either" onclick="setAddMode('either')">Either</button>
-      <button class="add-mode-btn" id="add-mode-together" onclick="setAddMode('together')">Together</button>
-    </div>
-
-    <button class="toggle-link" id="toggle-btn" onclick="toggleEdit()">Edit list</button>
-    <ul class="activity-list" id="activity-list" style="display:none"></ul>
   </div>
 
   <script type="module">
