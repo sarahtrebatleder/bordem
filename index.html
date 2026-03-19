@@ -711,7 +711,8 @@
 
     function renderList() {
       const ul = document.getElementById('activity-list');
-      if (!editOpen) { ul.style.display = 'none'; return; }
+      const isDesktop = window.innerWidth >= 769;
+      if (!editOpen && !isDesktop) { ul.style.display = 'none'; return; }
       ul.style.display = 'block';
 
       if (activities.length === 0) {
@@ -881,6 +882,6 @@
 
 
   </script>
-  <div id="sw-version">V24</div>
+  <div id="sw-version">V25</div>
 </body>
 </html>
