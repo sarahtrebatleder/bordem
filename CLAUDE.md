@@ -5,7 +5,7 @@ After every edit to any file, increment the cache version number in `sw.js`:
 Increment N by 1 from whatever the current value is. Do this even for small changes. 
 
 ## Visual Version Number
-When you update the cache version number, also update the number in '<div id="sw-version">V22</div>' to match the new version number in 'index.html'.
+When you update the cache version number, also update the number in `<div id="sw-version">V22</div>` to match the new version number in 'index.html'.
 
 ## Deployment
 This is a GitHub Pages site. The production URL is sarahtrebatleder.github.io/bordem/.
