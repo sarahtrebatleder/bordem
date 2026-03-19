@@ -58,6 +58,17 @@
       align-items: flex-end;
     }
 
+    #sw-version {
+      position: fixed;
+      bottom: 8px;
+      right: 12px;
+      font-size: 11px;
+      color: var(--color-text);
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
     .container {
       max-width: 480px;
       width: 100%;
@@ -851,5 +862,6 @@
 
 
   </script>
+  <div id="sw-version">V22</div>
 </body>
 </html>
