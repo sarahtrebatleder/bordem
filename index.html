@@ -12,39 +12,21 @@
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <style>
     :root {
-      /* Main background */
       --color-bg: #9FD3C7;
-
-      /* Primary brand (teal) */
       --color-primary: #2A7A6E;
-      --color-primary-hover: #3a6b63;
-      --color-primary-muted: #5a9e93;
-      --color-primary-dark: #1D6B61;
-
-      /* Status */
+      --color-primary-hover: #1D6B61;
       --color-error: #c0392b;
       --color-syncing: #c07a10;
       --color-success: #3a7d44;
-
-      /* Surfaces */
       --color-surface: #F5FAFA;
       --color-surface-white: #fff;
-
-      /* Mode tags */
       --color-solo-bg: #E0F2EF;
       --color-solo-border: #7BBDB5;
       --color-together-bg: #C8E8E3;
       --color-together-border: #5A9E93;
-
-      /* Text */
       --color-text: #2a2a2a;
-      --color-text-secondary: #555;
-      --color-text-muted: #777;
-      --color-text-subtle: #888;
-      --color-text-faint: #999;
-      --color-text-lighter: #aaa;
-      --color-text-faintest: #bbb;
-      --color-text-ghost: #ccc;
+      --color-text-secondary: #666;
+      --color-text-muted: #aaa;
 
       /* Other */
       --color-google-border: #d8d0c4;
@@ -87,7 +69,7 @@
     h1 { font-size: 26px; font-weight: normal; letter-spacing: 0.02em; color: var(--color-text); }
     .subtitle { color: var(--color-primary); font-size: 13px; }
 
-    .save-status { font-size: 12px; color: var(--color-primary-muted); font-style: italic; white-space: nowrap; padding-bottom: 2px; }
+    .save-status { font-size: 12px; color: var(--color-primary-hover); font-style: italic; white-space: nowrap; padding-bottom: 2px; }
     .save-status.error { color: var(--color-error); }
     .save-status.syncing { color: var(--color-syncing); }
 
@@ -138,10 +120,10 @@
     }
 
     .card-hint { color: var(--color-text-muted); font-size: 15px; margin-bottom: 24px; line-height: 1.5; }
-    .suggestion-category { font-size: 13px; color: var(--color-text-lighter); margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .suggestion-category { font-size: 13px; color: var(--color-text-muted); margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
     .suggestion { font-size: 22px; color: var(--color-text); margin-bottom: 28px; line-height: 1.4; }
-    .done-msg { color: var(--color-text-faint); font-size: 15px; margin-bottom: 20px; }
-    .empty-pool-msg { color: var(--color-text-faintest); font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+    .done-msg { color: var(--color-text-muted); font-size: 15px; margin-bottom: 20px; }
+    .empty-pool-msg { color: var(--color-text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
 
     .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
@@ -156,10 +138,10 @@
     .btn-success { background: var(--color-success); color: var(--color-surface-white); border: 1px solid var(--color-success); }
     .btn-ghost { background: transparent; color: var(--color-primary); border: 1px solid var(--color-primary); }
     .skip-category-link {
-      margin-top: 12px; font-size: 12px; color: var(--color-text-lighter); background: none; border: none;
+      margin-top: 12px; font-size: 12px; color: var(--color-text-muted); background: none; border: none;
       padding: 0; cursor: pointer; text-decoration: underline; letter-spacing: 0.02em;
     }
-    .skip-category-link:hover { color: var(--color-text-subtle); }
+    .skip-category-link:hover { color: var(--color-text-secondary); }
 
     .add-row { display: flex; gap: 8px; margin-bottom: 8px; }
     .add-mode-picker { display: flex; align-items: center; gap: 6px; margin-bottom: 16px; }
@@ -176,7 +158,7 @@
       font-size: 14px; font-family: inherit; background: rgba(255,255,255,0.75); color: var(--color-text); outline: none;
     }
     .add-row input:focus, .child-add-row input:focus { border-color: rgba(0,0,0,0.35); }
-    .add-row input::placeholder { color: var(--color-text-subtle); }
+    .add-row input::placeholder { color: var(--color-text-secondary); }
 
 
     .toggle-link {
@@ -202,12 +184,12 @@
     .activity-label { flex: 1; min-width: 0; }
 
     .expand-btn {
-      background: none; border: none; color: var(--color-text-faintest); cursor: pointer;
+      background: none; border: none; color: var(--color-text-muted); cursor: pointer;
       font-size: 12px; padding: 2px 4px; font-family: inherit; flex-shrink: 0;
     }
-    .expand-btn:hover { color: var(--color-text-subtle); }
+    .expand-btn:hover { color: var(--color-text-secondary); }
 
-    .child-count { font-size: 11px; color: var(--color-text-faintest); white-space: nowrap; flex-shrink: 0; }
+    .child-count { font-size: 11px; color: var(--color-text-muted); white-space: nowrap; flex-shrink: 0; }
 
     /* Mode tag pill */
     .mode-tag {
@@ -223,14 +205,14 @@
     }
     .mode-tag.either   { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.12); color: var(--color-text-muted); }
     .mode-tag.solo     { background: var(--color-solo-bg); border-color: var(--color-solo-border); color: var(--color-primary); }
-    .mode-tag.together { background: var(--color-together-bg); border-color: var(--color-together-border); color: var(--color-primary-dark); }
+    .mode-tag.together { background: var(--color-together-bg); border-color: var(--color-together-border); color: var(--color-primary-hover); }
 
 
     .remove-btn {
-      background: none; border: none; color: var(--color-text-ghost); cursor: pointer;
+      background: none; border: none; color: var(--color-text-muted); cursor: pointer;
       font-size: 20px; line-height: 1; padding: 0 2px; flex-shrink: 0;
     }
-    .remove-btn:hover { color: var(--color-text-faint); }
+    .remove-btn:hover { color: var(--color-text-muted); }
 
     .children-section {
       background: rgba(0,0,0,0.03); border-top: 1px solid rgba(0,0,0,0.06);
@@ -253,7 +235,7 @@
       border-radius: 3px; cursor: pointer; white-space: nowrap;
     }
 
-    .empty-msg { padding: 14px 16px; color: var(--color-text-faintest); font-size: 14px; font-style: italic; }
+    .empty-msg { padding: 14px 16px; color: var(--color-text-muted); font-size: 14px; font-style: italic; }
 
     .screen {
       position: fixed; inset: 0; background: var(--color-bg);
