@@ -1,4 +1,4 @@
-const CACHE = 'activity-picker-v24';
+const CACHE = 'activity-picker-v25';
 const ASSETS = [
   '/bordem/',
   '/bordem/index.html',
