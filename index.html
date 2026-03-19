@@ -270,8 +270,7 @@
     }
     .sign-out-btn:hover { color: var(--color-primary-hover); }
 
-    /* Hide desktop-left h1 on mobile; top-band h1 is used instead */
-    .desktop-left > h1 { display: none; }
+    .desktop-header { display: none; }
 
     @media (min-width: 769px) {
       .top-band { display: none; }
@@ -282,20 +281,41 @@
         flex: none;
       }
 
+      .desktop-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 48px 32px 24px;
+      }
+
       .desktop-layout {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1.4fr;
         gap: 48px;
         max-width: 960px;
         margin: 0 auto;
-        padding: 48px 32px;
+        padding: 0 32px 48px;
       }
 
-      .desktop-left > h1 { display: block; margin-bottom: 24px; }
+      .desktop-left {
+        display: flex;
+        flex-direction: column;
+      }
 
-      .card { min-height: 220px; }
+      .card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
 
       .activity-list { max-height: 600px; }
+
+      .desktop-right .activity-list { display: block !important; }
+
+      #toggle-btn { display: none; }
     }
   </style>
 </head>
@@ -326,17 +346,16 @@
   </div>
 
   <div class="container" style="opacity:0;transition:opacity 0.3s" id="app">
+    <div class="desktop-header">
+      <h1>What should I do?</h1>
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <p class="subtitle" id="count"></p>
+        <span class="save-status" id="save-status">✓ Synced</span>
+        <button class="sign-out-btn" id="signout-btn">Sign out</button>
+      </div>
+    </div>
     <div class="desktop-layout">
       <div class="desktop-left">
-        <h1>What should I do?</h1>
-
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px">
-          <p class="subtitle" id="count"></p>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-            <span class="save-status" id="save-status">✓ Synced</span>
-            <button class="sign-out-btn" id="signout-btn">Sign out</button>
-          </div>
-        </div>
 
         <!-- Mode toggle -->
         <div class="mode-toggle">
@@ -862,6 +881,6 @@
 
 
   </script>
-  <div id="sw-version">V22</div>
+  <div id="sw-version">V24</div>
 </body>
 </html>
