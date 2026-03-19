@@ -11,11 +11,49 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <style>
-    :root { --bg: #9FD3C7; }
+    :root {
+      /* Main background */
+      --color-bg: #9FD3C7;
+
+      /* Primary brand (teal) */
+      --color-primary: #2A7A6E;
+      --color-primary-hover: #3a6b63;
+      --color-primary-muted: #5a9e93;
+      --color-primary-dark: #1D6B61;
+
+      /* Status */
+      --color-error: #c0392b;
+      --color-syncing: #c07a10;
+      --color-success: #3a7d44;
+
+      /* Surfaces */
+      --color-surface: #F5FAFA;
+      --color-surface-white: #fff;
+
+      /* Mode tags */
+      --color-solo-bg: #E0F2EF;
+      --color-solo-border: #7BBDB5;
+      --color-together-bg: #C8E8E3;
+      --color-together-border: #5A9E93;
+
+      /* Text */
+      --color-text: #2a2a2a;
+      --color-text-secondary: #555;
+      --color-text-muted: #777;
+      --color-text-subtle: #888;
+      --color-text-faint: #999;
+      --color-text-lighter: #aaa;
+      --color-text-faintest: #bbb;
+      --color-text-ghost: #ccc;
+
+      /* Other */
+      --color-google-border: #d8d0c4;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: var(--bg);
+      background: var(--color-bg);
       font-family: Georgia, 'Times New Roman', serif;
       min-height: 100vh;
       min-height: 100dvh;
@@ -26,7 +64,7 @@
 
     .top-band {
       width: 100%;
-      background: var(--bg);
+      background: var(--color-bg);
       padding: max(env(safe-area-inset-top), 48px) 24px 20px;
     }
 
@@ -46,12 +84,12 @@
       position: relative;
     }
 
-    h1 { font-size: 26px; font-weight: normal; letter-spacing: 0.02em; color: #2a2a2a; }
-    .subtitle { color: #2A7A6E; font-size: 13px; }
+    h1 { font-size: 26px; font-weight: normal; letter-spacing: 0.02em; color: var(--color-text); }
+    .subtitle { color: var(--color-primary); font-size: 13px; }
 
-    .save-status { font-size: 12px; color: #5a9e93; font-style: italic; white-space: nowrap; padding-bottom: 2px; }
-    .save-status.error { color: #c0392b; }
-    .save-status.syncing { color: #c07a10; }
+    .save-status { font-size: 12px; color: var(--color-primary-muted); font-style: italic; white-space: nowrap; padding-bottom: 2px; }
+    .save-status.error { color: var(--color-error); }
+    .save-status.syncing { color: var(--color-syncing); }
 
     /* Mode toggle */
     .mode-toggle {
@@ -72,21 +110,21 @@
       border-radius: 3px;
       cursor: pointer;
       background: transparent;
-      color: #3a6b63;
+      color: var(--color-primary-hover);
       transition: all 0.15s;
       letter-spacing: 0.01em;
     }
 
     .mode-btn.active {
-      background: #fff;
-      color: #2a2a2a;
+      background: var(--color-surface-white);
+      color: var(--color-text);
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .mode-btn:active { opacity: 0.8; }
 
     .card {
-      background: #F5FAFA;
+      background: var(--color-surface);
       border: 1px solid rgba(0,0,0,0.1);
       border-radius: 6px;
       padding: 36px 28px;
@@ -99,11 +137,11 @@
       text-align: center;
     }
 
-    .card-hint { color: #777; font-size: 15px; margin-bottom: 24px; line-height: 1.5; }
-    .suggestion-category { font-size: 13px; color: #aaa; margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
-    .suggestion { font-size: 22px; color: #2a2a2a; margin-bottom: 28px; line-height: 1.4; }
-    .done-msg { color: #999; font-size: 15px; margin-bottom: 20px; }
-    .empty-pool-msg { color: #bbb; font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+    .card-hint { color: var(--color-text-muted); font-size: 15px; margin-bottom: 24px; line-height: 1.5; }
+    .suggestion-category { font-size: 13px; color: var(--color-text-lighter); margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .suggestion { font-size: 22px; color: var(--color-text); margin-bottom: 28px; line-height: 1.4; }
+    .done-msg { color: var(--color-text-faint); font-size: 15px; margin-bottom: 20px; }
+    .empty-pool-msg { color: var(--color-text-faintest); font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
 
     .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
@@ -114,42 +152,42 @@
     button:active { opacity: 0.75; }
     button:disabled { opacity: 0.4; cursor: default; }
 
-    .btn-primary { background: #2A7A6E; color: #fff; border: 1px solid #2A7A6E; }
-    .btn-success { background: #3a7d44; color: #fff; border: 1px solid #3a7d44; }
-    .btn-ghost { background: transparent; color: #2A7A6E; border: 1px solid #2A7A6E; }
+    .btn-primary { background: var(--color-primary); color: var(--color-surface-white); border: 1px solid var(--color-primary); }
+    .btn-success { background: var(--color-success); color: var(--color-surface-white); border: 1px solid var(--color-success); }
+    .btn-ghost { background: transparent; color: var(--color-primary); border: 1px solid var(--color-primary); }
     .skip-category-link {
-      margin-top: 12px; font-size: 12px; color: #aaa; background: none; border: none;
+      margin-top: 12px; font-size: 12px; color: var(--color-text-lighter); background: none; border: none;
       padding: 0; cursor: pointer; text-decoration: underline; letter-spacing: 0.02em;
     }
-    .skip-category-link:hover { color: #888; }
+    .skip-category-link:hover { color: var(--color-text-subtle); }
 
     .add-row { display: flex; gap: 8px; margin-bottom: 8px; }
     .add-mode-picker { display: flex; align-items: center; gap: 6px; margin-bottom: 16px; }
-    .add-mode-label { font-size: 12px; color: #2A7A6E; margin-right: 2px; }
+    .add-mode-label { font-size: 12px; color: var(--color-primary); margin-right: 2px; }
     .add-mode-btn {
       padding: 4px 12px; font-size: 12px; font-family: inherit;
       border: 1px solid rgba(0,0,0,0.2); border-radius: 3px; cursor: pointer;
-      background: transparent; color: #3a6b63; transition: all 0.15s;
+      background: transparent; color: var(--color-primary-hover); transition: all 0.15s;
     }
-    .add-mode-btn.active { background: #fff; color: #2a2a2a; border-color: rgba(0,0,0,0.3); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .add-mode-btn.active { background: var(--color-surface-white); color: var(--color-text); border-color: rgba(0,0,0,0.3); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
     .add-row input, .child-add-row input {
       flex: 1; padding: 10px 14px; border: 1px solid rgba(0,0,0,0.2); border-radius: 3px;
-      font-size: 14px; font-family: inherit; background: rgba(255,255,255,0.75); color: #2a2a2a; outline: none;
+      font-size: 14px; font-family: inherit; background: rgba(255,255,255,0.75); color: var(--color-text); outline: none;
     }
     .add-row input:focus, .child-add-row input:focus { border-color: rgba(0,0,0,0.35); }
-    .add-row input::placeholder { color: #888; }
+    .add-row input::placeholder { color: var(--color-text-subtle); }
 
 
     .toggle-link {
-      background: none; border: none; font-size: 13px; color: #2A7A6E;
+      background: none; border: none; font-size: 13px; color: var(--color-primary);
       cursor: pointer; padding: 0; text-decoration: underline; font-family: inherit;
     }
 
     /* Activity list */
     .activity-list {
       margin-top: 14px; list-style: none; border: 1px solid rgba(0,0,0,0.1);
-      border-radius: 4px; background: #fff; max-height: 480px; overflow-y: auto;
+      border-radius: 4px; background: var(--color-surface-white); max-height: 480px; overflow-y: auto;
     }
 
     .activity-item { border-bottom: 1px solid rgba(0,0,0,0.06); }
@@ -157,19 +195,19 @@
 
     .activity-row {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 16px; font-size: 14px; color: #2a2a2a;
+      padding: 10px 16px; font-size: 14px; color: var(--color-text);
     }
 
     .activity-row-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
     .activity-label { flex: 1; min-width: 0; }
 
     .expand-btn {
-      background: none; border: none; color: #bbb; cursor: pointer;
+      background: none; border: none; color: var(--color-text-faintest); cursor: pointer;
       font-size: 12px; padding: 2px 4px; font-family: inherit; flex-shrink: 0;
     }
-    .expand-btn:hover { color: #888; }
+    .expand-btn:hover { color: var(--color-text-subtle); }
 
-    .child-count { font-size: 11px; color: #bbb; white-space: nowrap; flex-shrink: 0; }
+    .child-count { font-size: 11px; color: var(--color-text-faintest); white-space: nowrap; flex-shrink: 0; }
 
     /* Mode tag pill */
     .mode-tag {
@@ -183,16 +221,16 @@
       letter-spacing: 0.02em;
       transition: all 0.15s;
     }
-    .mode-tag.either  { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.12); color: #777; }
-.mode-tag.solo    { background: #E0F2EF; border-color: #7BBDB5; color: #2A7A6E; }
-   .mode-tag.together { background: #C8E8E3; border-color: #5A9E93; color: #1D6B61; }
+    .mode-tag.either   { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.12); color: var(--color-text-muted); }
+    .mode-tag.solo     { background: var(--color-solo-bg); border-color: var(--color-solo-border); color: var(--color-primary); }
+    .mode-tag.together { background: var(--color-together-bg); border-color: var(--color-together-border); color: var(--color-primary-dark); }
 
 
     .remove-btn {
-      background: none; border: none; color: #ccc; cursor: pointer;
+      background: none; border: none; color: var(--color-text-ghost); cursor: pointer;
       font-size: 20px; line-height: 1; padding: 0 2px; flex-shrink: 0;
     }
-    .remove-btn:hover { color: #999; }
+    .remove-btn:hover { color: var(--color-text-faint); }
 
     .children-section {
       background: rgba(0,0,0,0.03); border-top: 1px solid rgba(0,0,0,0.06);
@@ -201,7 +239,7 @@
 
     .child-item {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 6px 0; font-size: 13px; color: #555;
+      padding: 6px 0; font-size: 13px; color: var(--color-text-secondary);
       border-bottom: 1px solid rgba(0,0,0,0.06);
     }
     .child-item:last-of-type { border-bottom: none; }
@@ -211,39 +249,39 @@
 
     .btn-small {
       font-family: inherit; font-size: 12px; padding: 7px 12px;
-      background: #2A7A6E; color: #fff; border: 1px solid #2A7A6E;
+      background: var(--color-primary); color: var(--color-surface-white); border: 1px solid var(--color-primary);
       border-radius: 3px; cursor: pointer; white-space: nowrap;
     }
 
-    .empty-msg { padding: 14px 16px; color: #bbb; font-size: 14px; font-style: italic; }
+    .empty-msg { padding: 14px 16px; color: var(--color-text-faintest); font-size: 14px; font-style: italic; }
 
     .screen {
-      position: fixed; inset: 0; background: var(--bg);
+      position: fixed; inset: 0; background: var(--color-bg);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       font-family: Georgia, serif; z-index: 10; padding: 24px; text-align: center;
     }
-    .screen h2 { font-size: 24px; font-weight: normal; color: #2a2a2a; margin-bottom: 10px; }
-    .screen p { color: #555; font-size: 14px; margin-bottom: 32px; }
+    .screen h2 { font-size: 24px; font-weight: normal; color: var(--color-text); margin-bottom: 10px; }
+    .screen p { color: var(--color-text-secondary); font-size: 14px; margin-bottom: 32px; }
 
     .btn-google {
       display: flex; align-items: center; gap: 12px;
-      background: #fff; border: 1px solid #d8d0c4; border-radius: 3px;
+      background: var(--color-surface-white); border: 1px solid var(--color-google-border); border-radius: 3px;
       padding: 12px 24px; font-size: 15px; font-family: Georgia, serif;
-      color: #2a2a2a; cursor: pointer; transition: opacity 0.15s;
+      color: var(--color-text); cursor: pointer; transition: opacity 0.15s;
     }
     .btn-google:hover { opacity: 0.8; }
 
     .sign-out-btn {
-      background: none; border: none; font-size: 12px; color: #2A7A6E;
+      background: none; border: none; font-size: 12px; color: var(--color-primary);
       cursor: pointer; font-family: inherit; text-decoration: underline; padding: 0;
     }
-    .sign-out-btn:hover { color: #3a6b63; }
+    .sign-out-btn:hover { color: var(--color-primary-hover); }
   </style>
 </head>
 <body>
 
   <div class="screen" id="loading-screen">
-    <p style="color:#555;margin:0">Loading…</p>
+    <p style="color:var(--color-text-secondary);margin:0">Loading…</p>
   </div>
 
   <div class="screen" id="signin-screen" style="display:none">
