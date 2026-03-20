@@ -270,6 +270,19 @@
     }
     .sign-out-btn:hover { color: var(--color-primary-hover); }
 
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .activity-count {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-top: -16px;
+      margin-bottom: 16px;
+    }
+
     .desktop-header { display: none; }
 
     @media (min-width: 769px) {
@@ -342,14 +355,17 @@
   <div class="top-band" id="top-band" style="opacity:0;transition:opacity 0.3s">
     <div class="top-band-inner">
       <h1>What should I do?</h1>
+      <div class="header-actions">
+        <span class="save-status" id="save-status-mob">✓ Synced</span>
+        <button class="sign-out-btn" id="signout-btn-mob">Sign out</button>
+      </div>
     </div>
   </div>
 
   <div class="container" style="opacity:0;transition:opacity 0.3s" id="app">
     <div class="desktop-header">
       <h1>What should I do?</h1>
-      <div style="display:flex;align-items:baseline;gap:16px">
-        <p class="subtitle" id="count"></p>
+      <div class="header-actions">
         <span class="save-status" id="save-status">✓ Synced</span>
         <button class="sign-out-btn" id="signout-btn">Sign out</button>
       </div>
@@ -363,6 +379,7 @@
           <button class="mode-btn active" id="mode-either" onclick="setMode('either')">Either</button>
           <button class="mode-btn" id="mode-together" onclick="setMode('together')">Together</button>
         </div>
+        <p class="activity-count" id="count"></p>
 
         <div class="card" id="card"></div>
       </div>
@@ -439,10 +456,12 @@
     document.getElementById('signin-btn').onclick = async () => {
       try { await signInWithPopup(auth, provider); } catch(e) { console.error(e); }
     };
-    document.getElementById('signout-btn').onclick = async () => {
+    async function handleSignOut() {
       if (unsubscribeSnapshot) unsubscribeSnapshot();
       await signOut(auth);
-    };
+    }
+    document.getElementById('signout-btn').onclick = handleSignOut;
+    document.getElementById('signout-btn-mob').onclick = handleSignOut;
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -509,9 +528,13 @@
     function saveToFirestore() { if (window._saveToFirestore) window._saveToFirestore(); }
 
     function setStatus(s) {
-      const el = document.getElementById('save-status');
-      el.className = 'save-status' + (s === 'error' ? ' error' : s === 'syncing' ? ' syncing' : '');
-      el.textContent = s === 'syncing' ? 'Syncing…' : s === 'error' ? 'Sync failed' : '✓ Synced';
+      const cls = 'save-status' + (s === 'error' ? ' error' : s === 'syncing' ? ' syncing' : '');
+      const text = s === 'syncing' ? 'Syncing…' : s === 'error' ? 'Sync failed' : '✓ Synced';
+      ['save-status', 'save-status-mob'].forEach(id => {
+        const el = document.getElementById(id);
+        el.className = cls;
+        el.textContent = text;
+      });
     }
 
     // --- Mode ---
@@ -882,6 +905,6 @@
 
 
   </script>
-  <div id="sw-version">V25</div>
+  <div id="sw-version">V26</div>
 </body>
 </html>
