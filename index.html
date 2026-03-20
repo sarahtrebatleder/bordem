@@ -604,8 +604,16 @@
         // Fresh start: exclude already-accepted suggestions for today
         const accepted = getAcceptedToday();
         const available = pool.map((_, i) => i).filter(i => !accepted.has(pool[i].label));
-        // If all have been accepted today, use the full pool (cycle complete)
-        q = shuffle(available.length > 0 ? available : pool.map((_, i) => i));
+        // If all have been accepted today, show end state unless repeats are allowed
+        if (available.length === 0) {
+          if (!window._allowRepeats) {
+            window._allAcceptedToday = true;
+            return false;
+          }
+          q = shuffle(pool.map((_, i) => i));
+        } else {
+          q = shuffle(available);
+        }
       }
       if (q.length === 0) return false;
       const idx = q[0];
@@ -623,6 +631,7 @@
         childQueue = [];
       }
       window._done = false;
+      window._allAcceptedToday = false;
       return true;
     }
 
@@ -670,6 +679,12 @@
       render();
     }
 
+    function handleGoAgain() {
+      window._allowRepeats = true;
+      window._allAcceptedToday = false;
+      handleStart();
+    }
+
     // --- Render ---
     function escHtml(s) {
       return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -710,6 +725,15 @@
         document.getElementById('yep-btn').onclick = handleYep;
         document.getElementById('nope-btn').onclick = handleNope;
         if (hasCategory) document.getElementById('skip-cat-btn').onclick = handleNewTop;
+
+      } else if (window._allAcceptedToday) {
+        card.innerHTML = `
+          <p class="done-msg">You've tried everything today.</p>
+          <p class="done-msg">Come back tomorrow, or:</p>
+          <div class="btn-row">
+            <button class="btn-primary" id="goagain-btn">Go again</button>
+          </div>`;
+        document.getElementById('goagain-btn').onclick = handleGoAgain;
 
       } else if (window._done) {
         card.innerHTML = `
@@ -906,6 +930,6 @@
 
 
   </script>
-  <div id="sw-version">V28</div>
+  <div id="sw-version">V29</div>
 </body>
 </html>
